@@ -1,0 +1,5 @@
+{
+  "bench": {"width":640,"height":360,"fps":15,"bitrate_kbps":1500,"mtu":1200,"jitter_ms":30},
+  "pi5-candidate": {"width":1280,"height":720,"fps":30,"bitrate_kbps":4000,"mtu":1200,"jitter_ms":30},
+  "pi3a-candidate": {"width":640,"height":360,"fps":15,"bitrate_kbps":1500,"mtu":1200,"jitter_ms":40}
+}

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Camera Studio
+Comment=Control the Raspberry Pi camera
+Exec=xdg-open http://127.0.0.1:8765
+Icon=camera-web
+Terminal=false
+Categories=AudioVideo;Video;

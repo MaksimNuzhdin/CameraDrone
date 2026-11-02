@@ -1,0 +1,23 @@
+{
+  "pi5-balanced": {
+    "name": "Pi 5 Balanced",
+    "description": "720p30 capture, 15 FPS preview, 4 Mbit/s recording. The baseline was tested on Pi 5; radio performance remains unverified.",
+    "hardware_status": "Pi 5 baseline verified",
+    "camera": {"width": 1280, "height": 720, "fps": 30, "preview_fps": 15, "jpeg_quality": 80, "record_bitrate": 4000000},
+    "analysis": {"objects": true, "faces": false, "qr": false, "motion": false, "confidence": 0.5, "interval_ms": 350}
+  },
+  "pi3a-light": {
+    "name": "Pi 3 A+ Candidate",
+    "description": "A conservative starting point for the 512 MB board. Prepared offline; CPU, memory, drivers and encoding must be measured on the real Pi 3 A+.",
+    "hardware_status": "Not tested on Pi 3 A+",
+    "camera": {"width": 640, "height": 360, "fps": 15, "preview_fps": 5, "jpeg_quality": 65, "record_bitrate": 1500000, "HdrMode": 0},
+    "analysis": {"objects": false, "faces": false, "qr": false, "motion": true, "confidence": 0.65, "interval_ms": 1200}
+  },
+  "offline-development": {
+    "name": "Offline Development",
+    "description": "720p software test camera with QR decoding. This profile does not model sensor exposure, autofocus or ISP HDR.",
+    "hardware_status": "Ubuntu software source",
+    "camera": {"width": 1280, "height": 720, "fps": 30, "preview_fps": 15, "jpeg_quality": 80, "record_bitrate": 4000000},
+    "analysis": {"objects": false, "faces": false, "qr": true, "motion": false, "confidence": 0.5, "interval_ms": 350}
+  }
+}

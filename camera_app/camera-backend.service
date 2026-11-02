@@ -1,0 +1,17 @@
+# Example only. Use the setup/deployment scripts to generate paths.
+[Unit]
+Description=Camera Studio capture and vision service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/camera_app
+ExecStart=/usr/bin/python3 %h/camera_app/backend.py
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+Environment=PYTHONUNBUFFERED=1
+UMask=0077
+
+[Install]
+WantedBy=default.target

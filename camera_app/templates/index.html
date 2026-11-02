@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Camera Studio</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="/"><span class="brand-icon">◉</span><span>CAMERA <b>STUDIO</b><small>Camera control · replay · analysis</small></span></a>
+  <div class="connection"><span id="connection-dot" class="dot"></span><span id="connection">Connecting…</span><span id="model-chip" class="chip">—</span></div>
+</header>
+<main>
+  <section class="workspace">
+    <div class="section-heading"><div><div id="view-eyebrow" class="eyebrow">SOURCE VIEW</div><h1>Your camera. In focus.</h1></div><button id="fullscreen" class="quiet">⛶ Full screen</button></div>
+    <section class="source-panel panel">
+      <div class="source-controls">
+        <div><label for="source-mode">Source</label><select id="source-mode"><option value="simulator">Simulator</option><option value="replay">Replay file</option><option value="pi">Raspberry Pi</option></select></div>
+        <div id="source-input-group" hidden><label for="source-input">Host input library</label><select id="source-input"></select></div>
+        <div id="source-url-group" hidden><label for="source-url">Camera API address</label><input id="source-url" type="url" placeholder="http://192.168.1.20:8081"></div>
+        <button id="apply-source">Apply source</button><button id="upload-input" class="quiet">+ Add file</button>
+        <input id="input-upload" type="file" accept="video/*,image/jpeg,image/png" hidden>
+      </div>
+      <div class="source-description"><span id="source-description">Loading source…</span><span id="source-notice"></span></div>
+      <div id="playback-controls" hidden><button id="playback-pause" class="quiet">Pause</button><input id="playback-seek" type="range" min="0" max="1" step="0.1" value="0" aria-label="Replay position"><span id="playback-time">—</span></div>
+    </section>
+    <div class="video-shell" id="video-shell">
+      <div class="video-top"><span class="live-label"><i></i> <span id="source-tag">SOURCE</span></span><span id="video-format">—</span><span id="record-badge" hidden>● REC <span id="record-seconds">0:00</span></span></div>
+      <div class="video-stage" id="video-stage"><img id="preview" alt="Video from the selected source"><canvas id="overlay" aria-label="Select a region to track"></canvas><div id="video-message">Waiting for source…</div></div>
+      <div class="video-bottom"><span id="video-hint">Clean video · analysis overlays are displayed separately</span><span id="frame-age">—</span></div>
+    </div>
+    <div class="toolbar">
+      <button id="snapshot" class="primary">◎ Snapshot <kbd>S</kbd></button>
+      <button id="snapshot-full" title="Full sensor resolution; briefly pauses preview">12 MP photo</button>
+      <button id="record"><span class="record-icon">●</span> <span id="record-label">Record video</span> <kbd>R</kbd></button>
+      <button id="select-track">⌖ Select target</button>
+      <button id="clear-track" class="quiet" hidden>Clear tracking</button>
+      <button id="reconnect" class="quiet" title="Reconnect preview">↻</button>
+    </div>
+    <div class="metrics">
+      <div><span>CAPTURE</span><strong id="capture-fps">—</strong><small>frames/s</small></div>
+      <div><span>PREVIEW</span><strong id="preview-fps">—</strong><small>frames/s</small></div>
+      <div><span>EXPOSURE</span><strong id="exposure">—</strong><small id="gain">gain —</small></div>
+      <div><span id="temperature-label">DEVICE TEMPERATURE</span><strong id="temperature">—</strong><small id="thermal-status">—</small></div>
+    </div>
+    <section class="insights panel"><div class="panel-title"><h2>Light & detail</h2><span id="quality-label" class="muted">Image analysis</span></div>
+      <div class="quality-grid"><canvas id="histogram" width="320" height="70" aria-label="Luminance histogram"></canvas><div><span>Mean brightness <b id="brightness">—</b></span><span>Dark pixels <b id="dark-pct">—</b></span><span>Bright pixels <b id="clipped-pct">—</b></span><span>Detail score* <b id="sharpness">—</b></span></div></div>
+      <p class="footnote">* Relative score on the reduced image. Scene dependent; it does not determine focus on its own.</p>
+    </section>
+    <section class="panel"><div class="panel-title"><h2>Analysis results</h2><span id="analysis-time" class="muted">—</span></div><div id="detections" class="detections"><span class="muted">Enable an analysis mode in the right panel.</span></div><div id="qr-results"></div></section>
+    <section class="panel events-panel"><div class="panel-title"><h2>Activity</h2><span id="disk" class="muted">—</span></div><div id="events"></div></section>
+  </section>
+  <aside>
+    <nav class="tabs" aria-label="Settings"><button class="active" data-tab="camera">Camera</button><button data-tab="vision">AI & CV</button><button data-tab="media">Media</button><button data-tab="lab">Lab</button></nav>
+    <section id="tab-camera" class="tab-content">
+      <div class="aside-heading"><h2>Camera settings</h2><span class="autosave">● Saved automatically</span></div>
+      <div class="preset-row"><button data-preset="default">Default</button><button data-preset="motion">Motion</button><button data-preset="lowlight">Low light</button></div>
+      <details class="profile-tools"><summary>Profiles & saved presets</summary>
+        <div class="control"><label for="performance-profile">Performance profile</label><select id="performance-profile"></select><p id="profile-description" class="footnote"></p></div>
+        <button id="apply-profile">Apply profile</button>
+        <div class="control"><label for="preset-name">Save current settings</label><input id="preset-name" type="text" maxlength="80" placeholder="My camera settings"></div><button id="save-preset">Save preset</button>
+        <div class="control"><label for="saved-preset">Saved presets</label><select id="saved-preset"></select></div>
+        <div class="preset-row"><button id="apply-saved-preset">Apply</button><button id="export-preset">Export JSON</button><button id="import-preset">Import</button></div>
+        <input id="preset-upload" type="file" accept="application/json,.json" hidden>
+      </details>
+      <div id="camera-controls"></div>
+      <div class="aside-actions"><button id="autofocus">◎ Focus once</button><button id="restart-camera" class="quiet">Restart capture</button><button id="reset-camera" class="quiet">Reset settings</button></div>
+      <p id="camera-note" class="footnote">Select a source to see its capabilities.</p>
+    </section>
+    <section id="tab-vision" class="tab-content" hidden>
+      <div class="aside-heading"><h2 id="analysis-heading">Image analysis</h2><p class="muted">Runs independently from video capture.</p></div>
+      <div class="ai-card"><label><span>Object detection<small>MobileNet-SSD · 20 VOC classes</small></span><input type="checkbox" data-ai="objects"></label><p>People, vehicles, animals and common objects. This model recognizes a limited set of classes.</p></div>
+      <div class="ai-card"><label><span>Face detection<small>Classic detector · no identification</small></span><input type="checkbox" data-ai="faces"></label></div>
+      <div class="ai-card"><label><span>QR codes<small>Local text and URL decoding</small></span><input type="checkbox" data-ai="qr"></label><p>Decoded content is displayed as text. Links are never opened automatically.</p></div>
+      <div class="ai-card"><label><span>Motion detection<small>Adaptive background model</small></span><input type="checkbox" data-ai="motion"></label><p>The first 10 cycles learn the background. Designed for a stationary camera.</p></div>
+      <div class="control"><label for="confidence">Confidence threshold <output id="confidence-value">50%</output></label><input id="confidence" type="range" min="20" max="95" step="5" value="50"></div>
+      <div class="control"><label for="interval">Analysis interval</label><select id="interval"><option value="150">150 ms · frequent</option><option value="350" selected>350 ms · balanced</option><option value="700">700 ms · economical</option><option value="1200">1200 ms</option><option value="1500">1500 ms</option></select></div>
+      <div class="ai-card"><h3>Region tracking</h3><p>Click Select target, then drag a region on the video. This lightweight template tracker cannot compensate for large scale or rotation changes. Tracking stops when confidence falls.</p><span id="track-status" class="chip">Inactive</span></div>
+      <p class="footnote" id="analysis-location">Analysis runs at a different rate from capture. Stale boxes are hidden automatically.</p>
+    </section>
+    <section id="tab-media" class="tab-content" hidden><div class="aside-heading"><h2>Photos & recordings</h2><button id="refresh-media" class="quiet">↻ Refresh</button></div><p id="media-description" class="muted">Files belong to the selected source.</p><div id="media-list"></div></section>
+    <section id="tab-lab" class="tab-content" hidden>
+      <div class="aside-heading"><h2>Replay analysis lab</h2><p class="muted">Analyze a saved input on Ubuntu, without the Pi.</p></div>
+      <div class="control"><label for="benchmark-input">Input</label><select id="benchmark-input"></select></div>
+      <div class="control"><label for="benchmark-stride">Analyze every Nth frame</label><input id="benchmark-stride" type="number" min="1" max="120" value="6"></div>
+      <div class="control"><label for="benchmark-maximum">Maximum analyzed frames</label><input id="benchmark-maximum" type="number" min="1" max="1000" value="300"></div>
+      <p class="footnote">Uses the enabled AI & CV modes. Results measure this Ubuntu host, not Raspberry Pi performance. Without labeled ground truth, detection counts are not accuracy scores.</p>
+      <button id="start-benchmark" class="primary">Analyze input</button>
+      <div id="benchmark-status" class="muted"></div>
+      <div id="benchmark-reports"></div>
+    </section>
+  </aside>
+</main>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<footer><span>CAMERA STUDIO / 0.2</span><span id="footer-source">Ubuntu host · explicit source selection</span><span id="api-time">—</span></footer>
+<script src="/static/app.js"></script>
+</body></html>

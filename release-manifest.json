@@ -1,0 +1,295 @@
+{
+  "format": "cameradrone-public-manifest",
+  "files": [
+    {
+      "path": ".github/workflows/offline.yml",
+      "bytes": 664,
+      "sha256": "62e56e5b1979d1399e69d696b2fcd8a36aebb5a1593e31fb6720140cfba64d90"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 387,
+      "sha256": "a4d511267772fdc32426669ee65a5913c09c236ee2ace86a20e2da78b37e66b9"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1071,
+      "sha256": "0962da46feb0d8a95fb3758bfdf0efa69bd953055990208e0104d457e3a8d423"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4727,
+      "sha256": "d9ff9f7d7bbe69f4975de7336705da8e0bdfc6a0fe2999efbef6bb91222c72b4"
+    },
+    {
+      "path": "THIRD_PARTY.md",
+      "bytes": 2146,
+      "sha256": "c0407777383124507ab40b3f9a05e5c548a93ad512270fff027c35fd2e09a5b0"
+    },
+    {
+      "path": "VALIDATION.md",
+      "bytes": 10749,
+      "sha256": "7ed70f1d57ce3536412d96d37bf31f70a81c69181bc87f923922cd218ffe4e66"
+    },
+    {
+      "path": "airlink/diagnose.py",
+      "bytes": 1153,
+      "sha256": "d182349533ce400f03adb82ed1fa613c5fd4fd95760014d081ebd84cb0be0922"
+    },
+    {
+      "path": "airlink/profiles.json",
+      "bytes": 303,
+      "sha256": "e133eb37970fab5232b2617fd60fc7169e301347ad97eee69d2b45de4fb50218"
+    },
+    {
+      "path": "airlink/video.py",
+      "bytes": 2823,
+      "sha256": "1f4fde18dd6c320a1f8bc5b1f2d2206fb01181a7849ac71692df252f5bd9c677"
+    },
+    {
+      "path": "camera_app/backend.py",
+      "bytes": 820,
+      "sha256": "8fcf7651b1692ca36f69d682a3cff8683159987b60329b354ec206a16170615f"
+    },
+    {
+      "path": "camera_app/benchmark.py",
+      "bytes": 5166,
+      "sha256": "1faa035c756df016592f6a23633e072cdc34cba9245d43c915e06d4dc638ed86"
+    },
+    {
+      "path": "camera_app/camera-backend.service",
+      "bytes": 378,
+      "sha256": "d23939fe29a7da0fbec4e3ca25f7d85f411db3a9749da91de7fd4c6abaff0d28"
+    },
+    {
+      "path": "camera_app/camera-studio.desktop",
+      "bytes": 188,
+      "sha256": "6ae9dc707cf5289b42f714ed0b5a47f0060ae6b240cda03df9ae719be6f5e3a3"
+    },
+    {
+      "path": "camera_app/camera-studio.service",
+      "bytes": 408,
+      "sha256": "1abfdf3e289312b6cbeab5af2083c63918b11da72f7c438afa815cf4c1a68a3e"
+    },
+    {
+      "path": "camera_app/camera_api.py",
+      "bytes": 3815,
+      "sha256": "ee474391b41e8d6b4490ba25d772fd58defa54dbb5f4ca415e8c1c9c943fd398"
+    },
+    {
+      "path": "camera_app/configuration.py",
+      "bytes": 2910,
+      "sha256": "d67d1b995845e97acdb886d402c8fd07d2232c7e6d925b519f46993549f1f74e"
+    },
+    {
+      "path": "camera_app/engine.py",
+      "bytes": 23485,
+      "sha256": "eb2413d9dda8bccc0698ab2577dafa7931df7284438d8d67ad896dcfd4ae3b6a"
+    },
+    {
+      "path": "camera_app/fetch_models.py",
+      "bytes": 1077,
+      "sha256": "b33ef674939ee573d58bfe8089b608f8e040cce7b24722ba29dae579bfb9205a"
+    },
+    {
+      "path": "camera_app/host.py",
+      "bytes": 8161,
+      "sha256": "e979716df4d54cfc57bbac774c6fd7dc88277f3f613506d3b6ea7e8fb7b400bd"
+    },
+    {
+      "path": "camera_app/host_services.py",
+      "bytes": 8702,
+      "sha256": "e4c0e574ee827723b925d0e8239020edc43944fe655124cf5a33ca573209cd3b"
+    },
+    {
+      "path": "camera_app/models/LICENSE.MobileNet-SSD",
+      "bytes": 1067,
+      "sha256": "5de433821cfe672af2fca73c3005f48af16121c95f6a11e1031b07807ea59905"
+    },
+    {
+      "path": "camera_app/models/README.md",
+      "bytes": 744,
+      "sha256": "3b39796a4e195d0a791601defb317b4f6d7000b77b69896f146cc337776207fa"
+    },
+    {
+      "path": "camera_app/models/deploy.prototxt",
+      "bytes": 44667,
+      "sha256": "2d180f723b3109e21f8287f6b3c691390d07b60eed998327cd3259ffa0e50608"
+    },
+    {
+      "path": "camera_app/models/mobilenet_iter_73000.caffemodel",
+      "bytes": 23306119,
+      "sha256": "52eed8be80522c152a17fb56740de705b79881bde1a167e0e747310523685fc7"
+    },
+    {
+      "path": "camera_app/offline.py",
+      "bytes": 20463,
+      "sha256": "4cd9c31c0881f9c7d702ff2c69be291acef662defb8dedd0bdb0c56227934c01"
+    },
+    {
+      "path": "camera_app/profiles.json",
+      "bytes": 1508,
+      "sha256": "b705541f4c4d2060b0dbe6319ce1feefbd9836f53fd4cf8e3bfa1ff9e118f62e"
+    },
+    {
+      "path": "camera_app/recording.py",
+      "bytes": 2696,
+      "sha256": "effaf2ebc721f5a9c97b571e2d2fdeaf14168b5eb2cd66fa82bf2577a458b6be"
+    },
+    {
+      "path": "camera_app/static/app.js",
+      "bytes": 27757,
+      "sha256": "255b428a92e628137b2e806a9292de5e86aafd7007d654354f5703af34060511"
+    },
+    {
+      "path": "camera_app/static/style.css",
+      "bytes": 11192,
+      "sha256": "fd5af6fc9f2e7273f487e9ada2db410de107ee21005dbd578d632006b5589d08"
+    },
+    {
+      "path": "camera_app/storage.py",
+      "bytes": 4624,
+      "sha256": "7c46df6f1759b027e576b80a0085a55bb7ecac32e8c00b29c36a25968b7cd449"
+    },
+    {
+      "path": "camera_app/templates/index.html",
+      "bytes": 10423,
+      "sha256": "6a45402a5475a830fbafbec4b0f7b3f349f6f37cb952c09165522aa51ecb290c"
+    },
+    {
+      "path": "camera_app/vision.py",
+      "bytes": 9780,
+      "sha256": "119602db8c8d7174ba487e8ccf81c05f0fbb4ca028d0f6178d603c6fb80ea761"
+    },
+    {
+      "path": "deploy-studio.sh",
+      "bytes": 1910,
+      "sha256": "20041907a1a99347eac405dd9a19eabc1f25cd9afcff85da63af844250f2d49b"
+    },
+    {
+      "path": "diagnose-netboot.sh",
+      "bytes": 752,
+      "sha256": "ac2a2191440f629b0a478ab7d86ae873041bd7aac1a2e41b19925edf48311919"
+    },
+    {
+      "path": "docs/AIRLINK.md",
+      "bytes": 7342,
+      "sha256": "fa9970b06259cf816995b3881adf630de66bc7eb820361d896a0b5318af5a5a2"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 5871,
+      "sha256": "41ade7090bac088ede1ffccc53480530ac6fa23a4313132d171e31ede31709ca"
+    },
+    {
+      "path": "docs/PUBLISHING.md",
+      "bytes": 1945,
+      "sha256": "d6745b962dbd7d45827cec99633a9d1a304cc91272132c30f22c73d07f431a83"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 3767,
+      "sha256": "7f370fb2bc28d840ff1f2c80c3410ea4a1a2b66e146f68eed13914693c54a2aa"
+    },
+    {
+      "path": "docs/SETUP.md",
+      "bytes": 5612,
+      "sha256": "49b4fe125476f92e9eac03d6ba9536c55c84ee6006a0c4ef05036a834b9d7b06"
+    },
+    {
+      "path": "docs/USER_GUIDE.md",
+      "bytes": 4635,
+      "sha256": "bfb205a7c6ab1ce4aba174780aef6969db84a39140d2fcf3ecb6b2bc50cdcf21"
+    },
+    {
+      "path": "docs/images/offline-studio.png",
+      "bytes": 72477,
+      "sha256": "7c8bdc9c91fcff145b573b5d2f2f74136f655981217ee9104e5b71cbc40d4fa1"
+    },
+    {
+      "path": "output/pdf/CameraDrone-Guide.pdf",
+      "bytes": 210062,
+      "sha256": "26775533ba60b0e47ca5f2aa24b280e6f852bf1a4a4f24baaac67ec1382cb5e8"
+    },
+    {
+      "path": "requirements-host.txt",
+      "bytes": 78,
+      "sha256": "150b4394fed2b6d57aa77d6953244b1d299a77aaecbe911d06bc0e65a0902d2f"
+    },
+    {
+      "path": "start-studio.sh",
+      "bytes": 332,
+      "sha256": "665f8423fa4d3e82ec6b96c67d24ef442907cd756c6ab4c4a20d19940645f3dd"
+    },
+    {
+      "path": "start-video.sh",
+      "bytes": 856,
+      "sha256": "6cede0c502a6fc307d5af3aeafd19f985d4b3da3693519fad595d1b06216e24a"
+    },
+    {
+      "path": "stop-studio.sh",
+      "bytes": 164,
+      "sha256": "b44e44010de7bfb90516fbeac558c3384e83c5980015421b22bbe81b1e5048d0"
+    },
+    {
+      "path": "stop-video.sh",
+      "bytes": 199,
+      "sha256": "14bf7e4c4c8aa613df9f340e9e08ca88c44392daf508bf744d744a591369aa25"
+    },
+    {
+      "path": "tests/hardware_check.py",
+      "bytes": 6637,
+      "sha256": "ddc8383d26868cf066b57ddb523426e20bf46c0d56b7e2c4b5b910375c91e97a"
+    },
+    {
+      "path": "tests/soak_check.py",
+      "bytes": 3184,
+      "sha256": "75002ec3e35fea5bdccaf4179a8759144b9408fa778a9e682809d47ed2da9660"
+    },
+    {
+      "path": "tests/test_airlink.py",
+      "bytes": 1717,
+      "sha256": "5aa83a5ceefc1480fddb6736dac9a77ce24c9339052364642b40d91f654cc7f2"
+    },
+    {
+      "path": "tests/test_offline.py",
+      "bytes": 9493,
+      "sha256": "253d1179e3b1f414fd4b949030e18dc1ca33378f643622572c9af049991565ed"
+    },
+    {
+      "path": "tests/vision_check.py",
+      "bytes": 2817,
+      "sha256": "8422e0ae0e835ba06ba4a7f13686cc10158e028c772d30cfeb0d0481f3a3e026"
+    },
+    {
+      "path": "tools/build_pdf.py",
+      "bytes": 7789,
+      "sha256": "c7d325994a3bb62b5f9e85a073fe700c79cdcec721d272a2ec3efd52654f3b02"
+    },
+    {
+      "path": "tools/fetch_test_fixtures.py",
+      "bytes": 1005,
+      "sha256": "a9c9b9cdc78b7b45d6bac18aacac9b1ecae1e632e7de971624198b1e65d92654"
+    },
+    {
+      "path": "tools/offline_soak.py",
+      "bytes": 2831,
+      "sha256": "538c4f371b1ccb06f2669c6cd9435624c9d0427aa90b4f006c1b4a9f28b2e480"
+    },
+    {
+      "path": "tools/prepare_public_release.py",
+      "bytes": 2799,
+      "sha256": "0ec74a0e90d05c6e37e7539d7475e78122805e8fdf68fbd091a6d3baac98ea28"
+    },
+    {
+      "path": "tools/setup_host.py",
+      "bytes": 1755,
+      "sha256": "8e532f3b83225de562fd1121b02cf36140dddbd99f9a84546b28e4a9e35db486"
+    },
+    {
+      "path": "view-video.sh",
+      "bytes": 431,
+      "sha256": "7d380bdf361994c057c0f36552e22c5063101ebf26de15911683f69f0982cc2b"
+    }
+  ]
+}

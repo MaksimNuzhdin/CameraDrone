@@ -1,0 +1,18 @@
+# Example only. Use the setup/deployment scripts to generate paths.
+[Unit]
+Description=Camera Studio Ubuntu control panel
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/CameraDrone/camera_app
+ExecStart=/usr/bin/python3 %h/CameraDrone/camera_app/host.py
+Restart=always
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=30
+UMask=0077
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

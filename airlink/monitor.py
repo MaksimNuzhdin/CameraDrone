@@ -46,14 +46,15 @@ def wire(data):
 
 
 from timing import latency_summary
+from sequence import SequenceCounter
 
 
 def run(args):
     Gst.init(None);lock=threading.RLock();stopping=threading.Event();started=time.monotonic()
     state=dict(frames=0,packets=0,bytes=0,first_frame_s=None,max_decode_gap_ms=0,width=None,height=None)
-    stamps={};latencies=[];frame_times=[];errors=[];warnings=[];calibration=None
+    sequences=SequenceCounter();stamps={};latencies=[];frame_times=[];errors=[];warnings=[];calibration=None
     command=(f'udpsrc address={args.bind} port={args.port} buffer-size=212992 caps="application/x-rtp,media=video,encoding-name=H264,payload=96,clock-rate=90000" '
-        '! queue name=ingress max-size-buffers=256 max-size-bytes=307200 max-size-time=100000000 leaky=downstream '
+        '! queue name=ingress max-size-buffers=256 max-size-bytes=307200 max-size-time=0 leaky=downstream '
         f'! rtpjitterbuffer name=jitter latency={args.jitter_ms} drop-on-latency=true do-lost=true '
         '! rtph264depay wait-for-keyframe=true ! h264parse ! avdec_h264 ! videoconvert '
         '! video/x-raw,format=RGB ! appsink name=frames emit-signals=true sync=false max-buffers=2 drop=true')
@@ -61,7 +62,10 @@ def run(args):
     def packet_probe(pad,info):
         buf=info.get_buffer()
         if buf:
-            with lock:state['packets']+=1;state['bytes']+=buf.get_size()
+            with lock:
+                state['packets']+=1;state['bytes']+=buf.get_size()
+                if buf.get_size()>=12:
+                    header=buf.extract_dup(0,12);sequences.observe(struct.unpack('!H',header[2:4])[0],struct.unpack('!I',header[8:12])[0])
         return Gst.PadProbeReturn.OK
     def timestamp_probe(pad,info):
         buf=info.get_buffer()
@@ -114,7 +118,7 @@ def run(args):
     after=calibrate(args.control_url) if args.control_url else None
     duration=time.monotonic()-started
     active_fps=(len(frame_times)-1)/(frame_times[-1]-frame_times[0]) if len(frame_times)>1 else 0
-    report=dict(state,duration_s=round(duration,3),decoded_fps=round(active_fps,3),errors=errors,warnings=warnings,jitter=jitter_stats,
+    report=dict(state,rtp_input=sequences.status(),duration_s=round(duration,3),decoded_fps=round(active_fps,3),errors=errors,warnings=warnings,jitter=jitter_stats,
         latency=latency_summary(latencies,calibration,after),
         receiver=dict(bind=args.bind,port=args.port,jitter_ms=args.jitter_ms),pixels_saved=False)
     if args.output:

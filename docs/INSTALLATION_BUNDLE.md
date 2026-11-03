@@ -9,9 +9,13 @@ python3 tools/build_release.py --output releases/CameraDrone-software.tar.gz
 (cd releases && sha256sum -c CameraDrone-software.tar.gz.sha256)
 ```
 
-The subshell verifies the checksum from the archive's directory. Given unchanged input files, two builds produce identical archive bytes. The PDF itself records its generation date; rebuild the archive after deliberately rebuilding the PDF.
+The subshell verifies the checksum from the archive's directory. Shell helpers receive canonical executable permissions (0755); other files use 0644. Given unchanged input files, two builds produce identical archive bytes. The PDF itself records its generation date; rebuild the archive after deliberately rebuilding the PDF.
 
 This archive is **not a bootable Raspberry Pi OS image**. It contains no partition table, kernel/root filesystem, EEPROM update, account password or SSH host keys. A cloned working SD card would also clone private credentials and recordings; it is intentionally not the public installation artifact.
+
+## Verified archive smoke test
+
+A clean archive was extracted into a temporary directory on Ubuntu and started on a separate loopback port. Simulator status, JPEG output, the latency-target route, newly generated private runtime permissions (0600), executable shell modes (0755) and clean SIGTERM shutdown were verified. This did not contact the Pi or alter the active host service. It validates the software archive route, not a fresh Raspberry Pi OS installation or a bootable image.
 
 ## Recommended existing-board route
 

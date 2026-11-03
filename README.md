@@ -39,7 +39,7 @@ The tested sensor is **Sony IMX708**, identified by the camera stack; the board 
 
 ## Verification status
 
-The current version was redeployed on Pi 5 and passed 18 functional hardware checks plus five known-input CV checks. A ten-minute stream had no errors and held 30.0-30.1 capture FPS after startup; its initial 22.3 FPS sample failed the original strict minimum-rate assertion and is explicitly retained in the [current hardware report](docs/HARDWARE_REGRESSION_2026-11-03.md). The offline suite passes 18 tests, including full MP4 decoding and H.264/RTP loopback. Pi 3 A+, RF performance and optical end-to-end latency remain unverified. See [validation evidence and limits](VALIDATION.md).
+The current version passed 18 functional Pi camera checks, six RTP lifecycle/guard checks and 19 offline tests. A corrected 30-minute real-camera Ethernet run decoded 54071 frames at 30.014 FPS, with no lost/late RTP packets and a 78.651 ms maximum decoded-frame gap. The initial failed receiver run and its fix remain documented in the [transport report](docs/RTP_VALIDATION_2026-11-03.md); earlier capture/recording regressions remain in the [hardware report](docs/HARDWARE_REGRESSION_2026-11-03.md). Pi 3 A+, RF performance and optical end-to-end latency remain unverified. See [validation evidence and limits](VALIDATION.md).
 
 ## Documentation
 

@@ -24,7 +24,7 @@ def sender(profile,host,port,buffers=None,h264=False):
 
 def receiver(profile,bind,port,headless=False,frames=None,output=None):
     command=['gst-launch-1.0','-q','-e','udpsrc',f'address={bind}',f'port={port}','buffer-size=212992',f'caps={CAPS}','!',
-             'queue','max-size-buffers=256','max-size-bytes=307200','max-size-time=100000000','leaky=downstream','!',
+             'queue','max-size-buffers=256','max-size-bytes=307200','max-size-time=0','leaky=downstream','!',
              'rtpjitterbuffer',f"latency={profile['jitter_ms']}",'drop-on-latency=true','!',
              'rtph264depay','!','h264parse','!','avdec_h264','!','videoconvert','!']
     if frames:command+=['identity',f'eos-after={frames}','!']

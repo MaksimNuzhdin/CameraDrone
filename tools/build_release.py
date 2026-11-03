@@ -20,7 +20,7 @@ with tempfile.TemporaryDirectory(prefix='cameradrone-release-') as tmp:
         for path in sorted(folder.rglob('*')):
             if not path.is_file():continue
             data=path.read_bytes();info=tarfile.TarInfo(str(Path('CameraDrone')/path.relative_to(folder)))
-            info.size=len(data);info.mtime=0;info.mode=0o644;info.uid=info.gid=0
+            info.size=len(data);info.mtime=0;info.mode=0o755 if path.suffix=='.sh' else 0o644;info.uid=info.gid=0
             archive.addfile(info,io.BytesIO(data))
 digest=hashlib.sha256(output.read_bytes()).hexdigest()
 output.with_suffix(output.suffix+'.sha256').write_text(digest+'  '+output.name+'\n')

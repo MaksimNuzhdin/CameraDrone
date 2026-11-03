@@ -45,3 +45,5 @@ Select the physical Raspberry Pi source, then open **Link**. Start the native re
 The same encoder can serve recording and RTP simultaneously. Stopping one keeps the other active. Format, rate, HDR, rotation, bitrate, full-sensor capture, restart and source selection stay locked while encoding. Exposure/white balance and AI options can still be adjusted. A camera service restart does not automatically resume network transmission.
 
 The **Latency target** link opens a changing visual timer for a later optical measurement. Aim the physical camera at the host display and use an independent high-speed reference to compare source and received views. The browser timer alone does not measure latency. Software decoder measurements are documented separately and exclude sensor/encoding/display delay.
+
+![Optical test reference; this generated timer is not a measured latency result.](images/latency-target.png)

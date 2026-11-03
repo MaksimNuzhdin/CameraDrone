@@ -4,6 +4,7 @@ import ipaddress
 import json
 import random
 import socket
+import struct
 import time
 from pathlib import Path
 
@@ -16,18 +17,24 @@ parser.add_argument('--seed',type=int,default=42);parser.add_argument('--output'
 args=parser.parse_args()
 for address in [args.bind,args.destination]:ipaddress.IPv4Address(address)
 if not (1024<=args.in_port<=65535 and 1024<=args.out_port<=65535 and 1<=args.seconds<=3600 and 0<=args.loss<=.5 and args.blackout_start>=0 and args.blackout_seconds>=0):parser.error('Invalid relay limits')
-randomizer=random.Random(args.seed);counts=dict(received=0,forwarded=0,blackout_dropped=0,random_dropped=0,send_dropped=0)
+randomizer=random.Random(args.seed);counts=dict(received=0,forwarded=0,blackout_dropped=0,random_dropped=0,send_dropped=0,kernel_receive_drops=0)
 with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as source,socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as destination:
+    source.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF,212992)
+    try:source.setsockopt(socket.SOL_SOCKET,40,1);overflow_supported=True  # Linux SO_RXQ_OVFL
+    except OSError:overflow_supported=False
     source.bind((args.bind,args.in_port));source.settimeout(.1);destination.setblocking(False);started=time.monotonic()
+    receive_buffer_bytes=source.getsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF)
     while time.monotonic()-started<args.seconds:
-        try:data,_=source.recvfrom(65535)
+        try:data,ancillary,_,_=source.recvmsg(65535,64)
         except socket.timeout:continue
+        for level,kind,value in ancillary:
+            if level==socket.SOL_SOCKET and kind==40 and len(value)>=4:counts['kernel_receive_drops']=max(counts['kernel_receive_drops'],struct.unpack('=I',value[:4])[0])
         counts['received']+=1;elapsed=time.monotonic()-started
         if args.blackout_start<=elapsed<args.blackout_start+args.blackout_seconds:counts['blackout_dropped']+=1
         elif randomizer.random()<args.loss:counts['random_dropped']+=1
         else:
             try:destination.sendto(data,(args.destination,args.out_port));counts['forwarded']+=1
             except OSError:counts['send_dropped']+=1
-report=dict(counts,seconds=round(time.monotonic()-started,3),configured_loss=args.loss,blackout_start_s=args.blackout_start,blackout_duration_s=args.blackout_seconds,seed=args.seed)
+report=dict(counts,seconds=round(time.monotonic()-started,3),receive_buffer_bytes=receive_buffer_bytes,overflow_counter_supported=overflow_supported,configured_loss=args.loss,blackout_start_s=args.blackout_start,blackout_duration_s=args.blackout_seconds,seed=args.seed)
 if args.output:args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(report,indent=2))
 print(json.dumps(report,indent=2))

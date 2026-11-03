@@ -23,8 +23,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5224,
-      "sha256": "f834e560c085d3ae57b79f48f0f02e3dc490459cb6b27d15317502cc94e42963"
+      "bytes": 5264,
+      "sha256": "2ff27c674e542e21668777dc312a247076396193021ad08af6bf9303c38f57fe"
     },
     {
       "path": "THIRD_PARTY.md",
@@ -33,8 +33,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "bytes": 11293,
-      "sha256": "52a50dbd1d5136a02701dc9451ceacef7b35b746c6830980b377932a9a958a6a"
+      "bytes": 11579,
+      "sha256": "ce13d797d6607fbc5565d2a918115d8a216f4720d12972e0b024a44f84bdf41b"
     },
     {
       "path": "airlink/budget.py",
@@ -48,18 +48,23 @@
     },
     {
       "path": "airlink/impair.py",
-      "bytes": 2339,
-      "sha256": "03ee77ba7993303bb456a331dc02dabf933c0e37682306d19dbd3bb8e21bce1f"
+      "bytes": 2975,
+      "sha256": "b41503b158368ce359b715d7ba6378703feefaed52d92ca1257efe2515ad0a3d"
     },
     {
       "path": "airlink/monitor.py",
-      "bytes": 7287,
-      "sha256": "2329c6c7ffbd3fef306d43cfb4007bcd6c2dc5c6a206e293f961fe49ee656abe"
+      "bytes": 7568,
+      "sha256": "c23932b5fa5a4bf49ae4076925d941aaa5f4bea17aa913345fbae2eba89d2351"
     },
     {
       "path": "airlink/profiles.json",
       "bytes": 303,
       "sha256": "e133eb37970fab5232b2617fd60fc7169e301347ad97eee69d2b45de4fb50218"
+    },
+    {
+      "path": "airlink/sequence.py",
+      "bytes": 845,
+      "sha256": "0f3e5c12390c3bf39a7ad0696d781b065a087cc7b2c5696a0dfb2090877e4b88"
     },
     {
       "path": "airlink/timing.py",
@@ -68,8 +73,8 @@
     },
     {
       "path": "airlink/video.py",
-      "bytes": 2962,
-      "sha256": "9258096a0aa5fc2a27dbbde6b0a5e0ba575dffeb4169ee09f4bf79c7c1fa4026"
+      "bytes": 2954,
+      "sha256": "35f9ed68c5816a10d003934c810df37cbeaf4a9284833fa6286a67529303c6f4"
     },
     {
       "path": "camera_app/backend.py",
@@ -218,13 +223,13 @@
     },
     {
       "path": "docs/AIRLINK.md",
-      "bytes": 10496,
-      "sha256": "6e89c4e8f24167e417b02a83d50cac9900f7cf753237bd182de6ca0fea883f9c"
+      "bytes": 10565,
+      "sha256": "667c8ff93a21d34d8e576ef08ef30b833306917f9fa07a47be090f5898d9b1dd"
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "bytes": 6285,
-      "sha256": "2247eaf6a1219e805c6e5aa082ddd0595b5b077c52e4d0d449e3957d4410ba68"
+      "bytes": 7276,
+      "sha256": "95433fa1d915b7cb12199043b1398eef0a0aaa6d7fe663405357b015987de0ce"
     },
     {
       "path": "docs/HARDWARE_REGRESSION_2026-11-03.md",
@@ -233,8 +238,8 @@
     },
     {
       "path": "docs/INSTALLATION_BUNDLE.md",
-      "bytes": 4509,
-      "sha256": "aef1794c3193ea41490fc29704272131ae27ed0ada40e10b57ea605817097fde"
+      "bytes": 5081,
+      "sha256": "52082d6a9d134071ce5488fee8b7133e1b37458a54b9334b69621bc766a2b1ee"
     },
     {
       "path": "docs/PUBLISHING.md",
@@ -243,13 +248,13 @@
     },
     {
       "path": "docs/ROADMAP.md",
-      "bytes": 4081,
-      "sha256": "30aa39dea925c03e6a0c83f781c4b339dd3cf57f84f68e236c4825735ed9905e"
+      "bytes": 4118,
+      "sha256": "7fc42e05ad9b74e978c9aca8952e5e4548ff7efa48578e704ff11011cd33fb65"
     },
     {
       "path": "docs/RTP_VALIDATION_2026-11-03.md",
-      "bytes": 7172,
-      "sha256": "c8f530465c8b26bdbf1cfa95bd7ad8968e2261a567e9af55efe535fc5b31000a"
+      "bytes": 14208,
+      "sha256": "6eff54e0fbc0ab5c9f9eb138d18ffb796582f72ccb5df921281f6cf5558824e0"
     },
     {
       "path": "docs/SETUP.md",
@@ -258,8 +263,8 @@
     },
     {
       "path": "docs/USER_GUIDE.md",
-      "bytes": 5740,
-      "sha256": "e0cb2f77037e0ea02b6da82d55b6f96becee513f23c4c3e28ef7de3434a2d301"
+      "bytes": 5850,
+      "sha256": "fb87d68b7b18762e4bfcd19507499290982cce2bf3b41d2b5fc47d38164f28e5"
     },
     {
       "path": "docs/images/latency-target.png",
@@ -272,9 +277,14 @@
       "sha256": "7c8bdc9c91fcff145b573b5d2f2f74136f655981217ee9104e5b71cbc40d4fa1"
     },
     {
+      "path": "docs/images/rtp-soak.png",
+      "bytes": 207028,
+      "sha256": "d535ab0c7dfa7e537c06191c62600e9b13520573899224b877681a3ea77f585d"
+    },
+    {
       "path": "output/pdf/CameraDrone-Guide.pdf",
-      "bytes": 237691,
-      "sha256": "2126423f6884da14e6a822cc8310fbb505f13253effa27ac79e0bab5c1122a70"
+      "bytes": 614896,
+      "sha256": "42c0dffb8e65eb84aea5f92ec564797b80cedb374d9dbdbbab730c19fc40390e"
     },
     {
       "path": "requirements-host.txt",
@@ -332,6 +342,11 @@
       "sha256": "c4b723a905dc74718fffaa5ee9e23459f660981bf3d8c5cdc495d9a9a39f9b31"
     },
     {
+      "path": "tests/test_sequence.py",
+      "bytes": 768,
+      "sha256": "ed8d8ea59a0bb77ed2d4fdc670e90f89ecf159bf7b9be72634eb2dae8715ffde"
+    },
+    {
       "path": "tests/test_timing.py",
       "bytes": 1068,
       "sha256": "24c86b921a5f9f9830bfd62bb8396355d56e56d1b6b82bcd68a24dc0acfe65a3"
@@ -342,9 +357,14 @@
       "sha256": "c4464ba71438b433a7cd6cf717ce910264b823a584bf93a5415637120da5ecad"
     },
     {
+      "path": "tests/transport_recovery.py",
+      "bytes": 3663,
+      "sha256": "a5e7796801c5682cf7023950f4d484b6a34f92d75cc7bcfb0964c88d78e464a5"
+    },
+    {
       "path": "tests/transport_soak.py",
-      "bytes": 5967,
-      "sha256": "f13712db10a86ef5ff375349976bcba5c87b7a971fa59de4d61dc757b3e30fad"
+      "bytes": 6040,
+      "sha256": "2d05c0a40b915f1da3f035e022436c7ad7abe627f07d6d7336383998f6526814"
     },
     {
       "path": "tests/vision_check.py",
@@ -353,13 +373,13 @@
     },
     {
       "path": "tools/build_pdf.py",
-      "bytes": 8003,
-      "sha256": "4cd268178e26503665ec0a6282eb36800e122b9e85b4a6061c1ab4e04433c069"
+      "bytes": 8451,
+      "sha256": "d63e94ea261cffac4d8058d10bae61f8df3fc954444c0c4af983caf1404b266e"
     },
     {
       "path": "tools/build_release.py",
-      "bytes": 1492,
-      "sha256": "5422c4344054d0c42b07064264391d658c8083d2a34c4b1fe3b7c1320a0a1ca4"
+      "bytes": 1525,
+      "sha256": "ce3f03a9a91420c364434a02d60fe558f22fe8f5ec44fa0d896a94c6768f6016"
     },
     {
       "path": "tools/environment.py",
@@ -375,6 +395,11 @@
       "path": "tools/offline_soak.py",
       "bytes": 2831,
       "sha256": "538c4f371b1ccb06f2669c6cd9435624c9d0427aa90b4f006c1b4a9f28b2e480"
+    },
+    {
+      "path": "tools/plot_transport_report.py",
+      "bytes": 1926,
+      "sha256": "d1dbc0c106f4d11a0b511153adf7242b6e46b822141bfae1ba6190326d2aef34"
     },
     {
       "path": "tools/prepare_public_release.py",

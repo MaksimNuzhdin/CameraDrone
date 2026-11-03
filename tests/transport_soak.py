@@ -70,6 +70,7 @@ try:
     assert decoded['decoded_fps']>24 and decoded['frames']>args.seconds*24,decoded['frames']
     assert not decoded['errors'] and decoded['jitter'].get('num-lost',0)==0,decoded['jitter']
     assert decoded['max_decode_gap_ms']<1500,decoded['max_decode_gap_ms']
+    assert decoded['rtp_input']['sequence_gaps']==0,decoded['rtp_input']
     assert samples[-1]['transport']['dropped_packets']==0 and samples[-1]['transport']['invalid_frames']==0
 except BaseException as exc:
     failure=f'{type(exc).__name__}: {exc}'

@@ -64,6 +64,12 @@ curl -H 'X-Camera-Client: 1' -H 'Content-Type: application/json' \
 
 Validation rejects unknown keys, nonfinite values, wrong types and invalid ranges. Complete resolution pairs are checked against 640x360, 1280x720 and 1920x1080. Host presets use `format: camera-studio-preset`, `version: 1`, name, camera object and optional analysis object. Applying a preset filters unsupported physical settings in offline mode, then applies camera and AI values; camera settings are rolled back if AI application fails.
 
+## Encoded transport state
+
+`/api/status.transport` reports support, active state, destination options, codec/payload type, sender counters and `auto_resume:false`. Its counters distinguish encoded frames, keyframes, successful datagrams/bytes, local socket drops and malformed encoder input. They do not establish receiver delivery. `/api/status.encoding` reports one encoder generation and current consumers (`rtp`, `recording`), so lifecycle tests can detect unintended encoder replacement.
+
+Starting the first consumer starts encoding; stopping the last releases it. Camera service shutdown finalizes the recording and closes RTP. Stream destinations are never resumed automatically after a restart. The host Link tab proxies explicit start/stop requests; Simulator/Replay reject physical transport. The native receiver uses standard RTP caps and ignores the optional private timestamp extension. Software clock validity is checked separately from decoded-frame counts and packet loss.
+
 ## Private storage
 
 - `camera_app/runtime.json`: shared token + Pi URL, mode 0600.

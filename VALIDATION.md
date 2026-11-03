@@ -112,7 +112,7 @@ and `artifacts/reboot-results.json`.
 
 ## Current Ubuntu offline extension (2026-11-03)
 
-The initial offline extension passed **12 tests** (the RTP extension raises the current suite to **18**):
+The initial offline extension passed **12 tests** (the RTP extension raises the current suite to **19**):
 
 | Check | Observed result |
 | --- | --- |
@@ -161,4 +161,6 @@ Physical cold boot and power loss, Pi3 encoder/driver/RAM suitability, actual RF
 
 ## Real Pi RTP extension (release 0.3)
 
-See [the dedicated transport report](docs/RTP_VALIDATION_2026-11-03.md) for single-encoder recording fanout, real Ethernet decode, timestamp latency methodology, controlled blackout and service-restart recovery. The current host suite has 18 passing tests. Software timestamp latency excludes exposure, ISP, encoding and display; it is not a replacement for an optical test.
+See [the dedicated transport report](docs/RTP_VALIDATION_2026-11-03.md) for single-encoder recording fanout, real Ethernet decode, timestamp latency methodology, controlled blackout and service-restart recovery. The current host suite has 19 passing tests. Software timestamp latency excludes exposure, ISP, encoding and display; it is not a replacement for an optical test.
+
+The RTP extension also retains initial buffer/queue failures and the final direct regression's 969.520 ms maximum decoded-frame gap. Passing the current functional acceptance does not establish hard real-time delivery; see the dedicated report for complete results and clock validity.

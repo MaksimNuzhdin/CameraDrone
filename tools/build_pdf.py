@@ -51,7 +51,14 @@ def parse(path):
     while i<len(lines):
         line=lines[i];i+=1
         if not line.strip():continue
-        if line.startswith('!['):continue
+        if line.startswith('!['):
+            match=re.fullmatch(r'!\[([^]]*)\]\(([^)]+)\)',line.strip())
+            if match:
+                picture=(path.parent/match[2]).resolve()
+                if picture.is_file() and ROOT in picture.parents:
+                    w,h=ImageReader(str(picture)).getSize();scale=min(WIDTH/w,350/h)
+                    result.extend([Image(str(picture),width=w*scale,height=h*scale),Spacer(1,6),para(match[1],'cell'),Spacer(1,10)])
+            continue
         if line.startswith('```'):
             language=line[3:].strip();code=[]
             while i<len(lines) and not lines[i].startswith('```'):code.append(lines[i]);i+=1

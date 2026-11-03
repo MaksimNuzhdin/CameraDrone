@@ -95,14 +95,14 @@ def footer(canvas,doc):
 story=[Spacer(1,32),para('CAMERADRONE','h1'),para('Camera Studio engineering guide','h2'),
        para('Ubuntu host application - Raspberry Pi camera - offline development - airborne video preparation'),
        Spacer(1,12),para('Release 0.2 / 3 November 2026'),
-       para('Current host functionality is validated without a connected Pi. Historical real-board results are identified separately. Radio integration and Pi 3 A+ performance remain unverified.'),Spacer(1,12)]
+       para('Ubuntu offline validation and current Pi 5 hardware regression are documented separately, including startup-rate observations and a recording shutdown fix. Radio integration and Pi 3 A+ performance remain unverified.'),Spacer(1,12)]
 shot=ROOT/'docs/images/offline-studio.png'
 if shot.exists():
     w,h=ImageReader(str(shot)).getSize();story.append(Image(str(shot),width=WIDTH,height=WIDTH*h/w))
 story+=[Spacer(1,8),para('Synthetic preview only. No real camera imagery or credentials are included.','cell'),PageBreak()]
 chapters=[('Quick start','README.md'),('Setup and deployment','docs/SETUP.md'),('Application workflow','docs/USER_GUIDE.md'),
           ('Architecture and API','docs/ARCHITECTURE.md'),('Airborne transport','docs/AIRLINK.md'),('Validation and limits','VALIDATION.md'),
-          ('Hardware roadmap','docs/ROADMAP.md'),('Third-party components','THIRD_PARTY.md'),('Public release workflow','docs/PUBLISHING.md')]
+          ('Current Pi 5 regression','docs/HARDWARE_REGRESSION_2026-11-03.md'),('Hardware roadmap','docs/ROADMAP.md'),('Third-party components','THIRD_PARTY.md'),('Public release workflow','docs/PUBLISHING.md')]
 story += [para('Guide contents','h1')]
 for number,(title,path) in enumerate(chapters,1):story.append(para(f'{number:02d}  {title}'))
 story += [Spacer(1,20),para('Source of truth','h2'),para('This guide is generated from the Markdown documents in the repository. Shell examples use the repository working directory. Use your virtualenv Python where appropriate. Local addresses shown in examples are placeholders; private runtime files and test recordings are intentionally absent.'),

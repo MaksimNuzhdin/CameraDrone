@@ -9,7 +9,8 @@ WorkingDirectory=%h/camera_app
 ExecStart=/usr/bin/python3 %h/camera_app/backend.py
 Restart=always
 RestartSec=3
-TimeoutStopSec=20
+KillMode=mixed
+TimeoutStopSec=30
 Environment=PYTHONUNBUFFERED=1
 UMask=0077
 

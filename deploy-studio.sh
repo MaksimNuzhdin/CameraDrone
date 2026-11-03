@@ -18,7 +18,7 @@ import subprocess
 from pathlib import Path
 home=Path.home();units=home/'.config/systemd/user';units.mkdir(parents=True,exist_ok=True)
 def q(v):return '"'+str(v).replace('%','%%').replace('"','\\"')+'"'
-(units/'camera-backend.service').write_text('[Unit]\nDescription=Camera Studio Pi backend\nAfter=network.target\n[Service]\nExecStart=/usr/bin/python3 '+q(home/'camera_app/backend.py')+'\nRestart=on-failure\nRestartSec=3\nEnvironment=PYTHONUNBUFFERED=1\n[Install]\nWantedBy=default.target\n')
+(units/'camera-backend.service').write_text('[Unit]\nDescription=Camera Studio Pi backend\nAfter=network.target\n[Service]\nExecStart=/usr/bin/python3 '+q(home/'camera_app/backend.py')+'\nRestart=on-failure\nRestartSec=3\nKillMode=mixed\nTimeoutStopSec=30\nUMask=0077\nEnvironment=PYTHONUNBUFFERED=1\n[Install]\nWantedBy=default.target\n')
 subprocess.run(['systemctl','--user','daemon-reload'],check=True)
 subprocess.run(['systemctl','--user','enable','--now','camera-backend.service'],check=True)
 PY

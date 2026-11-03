@@ -109,6 +109,8 @@ class CameraEngine:
         temporary.replace(self.settings_path)
 
     def submit(self, action, values=None):
+        if not self.running:
+            raise RuntimeError('Camera is stopping')
         future = concurrent.futures.Future()
         try:
             self.jobs.put_nowait((future, action, values))
@@ -478,7 +480,9 @@ class CameraEngine:
         try:
             while self.running:
                 with self.condition:
-                    self.condition.wait_for(lambda: self.preview_sequence != sequence and self.jpeg is not None, timeout=5)
+                    self.condition.wait_for(lambda: not self.running or (self.preview_sequence != sequence and self.jpeg is not None), timeout=5)
+                    if not self.running:
+                        break
                     if self.jpeg is None or self.preview_sequence == sequence:
                         continue
                     data, sequence = self.jpeg, self.preview_sequence
@@ -486,3 +490,22 @@ class CameraEngine:
         finally:
             with self.lock:
                 self.stream_clients -= 1
+
+    def close(self):
+        """Let the capture owner finalize its encoder before the process exits."""
+        with self.condition:
+            self.status = 'stopping'
+            self.running = False
+            self.condition.notify_all()
+        deadline = time.monotonic() + 20
+        for thread in self.threads:
+            thread.join(timeout=max(0, deadline-time.monotonic()))
+        while True:
+            try:
+                future, _, _ = self.jobs.get_nowait()
+            except queue.Empty:
+                break
+            if not future.done():
+                future.set_exception(RuntimeError('Camera stopped before this operation ran'))
+        if any(thread.is_alive() for thread in self.threads):
+            LOG.error('Camera workers did not finish within the shutdown deadline')

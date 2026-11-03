@@ -2,12 +2,16 @@
 import json
 import logging
 import os
+import signal
 from pathlib import Path
 from werkzeug.serving import make_server
 from camera_api import create_camera_app
 
 
 def main():
+    def stop_signal(signum, frame):
+        raise KeyboardInterrupt
+    signal.signal(signal.SIGTERM, stop_signal)
     from engine import CameraEngine
     base = Path(__file__).resolve().parent
     token = json.loads((base/'runtime.json').read_text())['token']
@@ -17,7 +21,13 @@ def main():
     app = create_camera_app(engine, token)
     server = make_server('0.0.0.0', int(os.environ.get('CAMERA_PORT','8081')), app, threaded=True)
     server.daemon_threads = True
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        engine.close()
+        server.server_close()
 
 
 if __name__ == '__main__':

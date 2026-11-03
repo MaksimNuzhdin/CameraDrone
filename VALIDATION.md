@@ -2,7 +2,7 @@
 
 ## Scope of evidence
 
-This document separates the **historical Pi 5 baseline** from the **current offline extension**, validated on Ubuntu on 2026-11-03. The Pi was unplugged during the latter work. The shared API extraction, host source switching and portable deployment changes have not been retested on real hardware. Historical hardware results are evidence for the earlier baseline, not certification of every current source revision. Private raw artifacts and real camera images are intentionally excluded from the public repository.
+This document separates the **historical Pi 5 baseline** from the **current offline extension**, validated on Ubuntu on 2026-11-03. The Pi was unplugged during the initial offline extension. It subsequently returned and the current version was redeployed and exercised on the real Pi 5. See the [2026-11-03 hardware regression](docs/HARDWARE_REGRESSION_2026-11-03.md), including the retained startup-rate assertion failure and separate steady-state measurements. Historical results below remain evidence for their original baseline. Private raw artifacts and real camera images are intentionally excluded from the public repository.
 
 
 Validation used the real Raspberry Pi 5 (8 GB) and its CSI IMX708 camera.
@@ -157,4 +157,4 @@ Hardware scripts `tests/hardware_check.py` and `tests/soak_check.py` change sett
 
 ### Remaining unverified behavior
 
-Current source on real Pi, physical cold boot and power loss, Pi3 encoder/driver/RAM suitability, actual RF adapter support, RF packet loss/FEC/recovery, optical latency, range, field accuracy, storage-exhaustion behavior and long-term 1080p operation still need physical tests. A localhost transport test does not establish any of those results.
+Physical cold boot and power loss, Pi3 encoder/driver/RAM suitability, actual RF adapter support, RF packet loss/FEC/recovery, optical latency, range, field accuracy, storage-exhaustion behavior and long-term 1080p operation still need physical tests. A localhost transport test does not establish any of those results.

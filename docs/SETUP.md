@@ -41,7 +41,7 @@ export PI_TARGET=youruser@192.168.1.20
 bash deploy-studio.sh
 ```
 
-The script verifies model checksums, transfers source/models/private shared token, generates a Pi user service, and starts it. It preserves `camera_app/data/` and never copies host input videos. Dependencies must already be installed. Review local source before redeployment: the current shared API refactor still needs a real-board regression run.
+The script verifies model checksums, transfers source/models/private shared token, generates a Pi user service, and starts it. It preserves `camera_app/data/` and never copies host input videos. Dependencies must already be installed. Review local source before redeployment and repeat the hardware regression after camera/backend changes. The current Pi 5 regression is documented separately.
 
 On the Pi, enable boot startup without an SSH login:
 
@@ -68,4 +68,4 @@ Do not remove storage while the Pi is running. Use a clean shutdown before physi
 - **Low storage:** new writes are refused below 256 MB; recording stops near that threshold. Inputs require at least 1 GB free before import. No automatic media deletion is implemented.
 - **Pi temperature:** ensure active cooling and adequate power. Preview/AI workload caps help but do not replace cooling.
 
-Host MP4 requires a clean stop to finalize. SIGTERM and Ctrl-C trigger host cleanup. The generated host service uses `KillMode=mixed` and `TimeoutStopSec=30` so Python can finalize its encoder before systemd terminates remaining children. Abrupt power loss can damage an unfinished recording. The Pi baseline uses a different fragmented-MP4 output path; its existing resilience does not prove SD-card or power-loss safety.
+Host MP4 requires a clean stop to finalize. The Pi backend also handles SIGTERM and finalizes its encoder through the capture owner before exit; deploy the generated Pi unit with `KillMode=mixed` so its FFmpeg child is not killed prematurely. SIGTERM and Ctrl-C trigger host cleanup. The generated host service uses `KillMode=mixed` and `TimeoutStopSec=30` so Python can finalize its encoder before systemd terminates remaining children. Abrupt power loss can damage an unfinished recording. The Pi baseline uses a different fragmented-MP4 output path; its existing resilience does not prove SD-card or power-loss safety.

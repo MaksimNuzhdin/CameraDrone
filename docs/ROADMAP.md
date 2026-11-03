@@ -1,6 +1,8 @@
 # Hardware return and Pi 3 A+ migration
 
-## Next session with the existing Pi 5
+## Regression after future Pi 5 changes
+
+The current version has completed functional and ten-minute Pi 5 regression; see [the measured report](HARDWARE_REGRESSION_2026-11-03.md). Physical cold boot, a longer thermal run and real-camera RTP remain next milestones. Repeat these checks after future changes.
 
 1. Preserve its existing bootable card and deployed baseline. Back up private settings/media separately; they are not in the public repository.
 2. Verify the detected sensor (`rpicam-hello --list-cameras`) and confirm no second capture process.

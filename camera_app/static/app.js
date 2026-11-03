@@ -95,6 +95,10 @@ function text(id,value){$(id).textContent=value;}
 function update(s){
   status=s;
   const online=s.status==='running'&&s.frame_age_ms!==null&&s.frame_age_ms<3000;
+  if(lastSourceEpoch!==s.source_epoch){
+    initialized=false;
+    if(hostInfo&&!sourceFormDirty)run(loadHost);
+  }
   if(online&&(!wasOnline||s.uptime_s<previousUptime||lastSourceEpoch!==s.source_epoch))reconnect();
   lastSourceEpoch=s.source_epoch;
   wasOnline=online;previousUptime=s.uptime_s;
@@ -117,6 +121,7 @@ function update(s){
   text('analysis-time',a.inference_ms!==undefined?`${a.inference_ms} ms / age ${s.analysis_age_ms} ms`:'—');
   const ctx=$('histogram').getContext('2d');ctx.clearRect(0,0,320,70);
   if(a.histogram){const max=Math.max(...a.histogram,1);ctx.fillStyle='#bfe996';a.histogram.forEach((n,i)=>ctx.fillRect(i*10,70-n/max*65,7,n/max*65));}
+  if(!initialized){syncControls(s.settings);initialized=true;}
   const rec=Boolean(s.recording);$('record-badge').hidden=!rec; text('record-label',rec?'Stop recording':'Record video');$('record').classList.toggle('selected',rec);
   if(rec)text('record-seconds',Math.floor(s.recording.seconds/60)+':'+String(Math.floor(s.recording.seconds%60)).padStart(2,'0'));
   for(const k of ['resolution','fps','rotation','HdrMode','record_bitrate'])$('control-'+k).disabled=rec;
@@ -132,12 +137,12 @@ function update(s){
   if(!$('detections').children.length){const span=document.createElement('span');span.className='muted';span.textContent=a.error||'No detections in the current frame.';$('detections').append(span);}
   $('qr-results').replaceChildren();for(const value of a.qr||[]){const p=document.createElement('p');p.textContent=value;$('qr-results').append(p);}
   $('events').replaceChildren();for(const e of s.events.slice(0,8)){const row=document.createElement('div');row.className='event';const time=document.createElement('time');time.textContent=new Date(e.time).toLocaleTimeString('en-GB');row.append(time,document.createTextNode(e.message));$('events').append(row);}
-  if(!initialized){syncControls(s.settings);initialized=true;}
   for(const input of document.querySelectorAll('[data-ai]')){input.checked=Boolean(s.ai_options[input.dataset.ai]);input.disabled=!s.capabilities[input.dataset.ai];}
   if(document.activeElement!==$('confidence')){$('confidence').value=s.ai_options.confidence*100;text('confidence-value',Math.round(s.ai_options.confidence*100)+'%');}
   if(document.activeElement!==$('interval'))$('interval').value=s.ai_options.interval_ms;
   applySourceStatus(s);
-  if(!s.controls.AfMode){$('control-AfMode').disabled=true;$('control-LensPosition').disabled=true;$('autofocus').disabled=true;}
+  $('autofocus').disabled=!s.controls.AfMode;
+  if(!s.controls.AfMode){$('control-AfMode').disabled=true;$('control-LensPosition').disabled=true;}
 }
 async function poll(){
   if(polling)return;polling=true;

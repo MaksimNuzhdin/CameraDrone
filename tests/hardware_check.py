@@ -137,7 +137,13 @@ def zoom():
     return dict(before=before,after=after)
 
 
-original=call('status')['settings']
+initial=call('status')
+if not initial.get('hardware') or initial.get('status')!='running':
+    raise RuntimeError('Select a running Raspberry Pi camera before hardware checks')
+if initial.get('recording'):
+    raise RuntimeError('Stop the current recording before hardware checks')
+original=initial['settings']
+original_analysis=initial['ai_options']
 try:
     check('validation: unknown control',lambda:call('settings',{'NotAControl':1},expected=400))
     check('validation: invalid resolution',lambda:call('settings',{'width':123},expected=400))
@@ -166,7 +172,7 @@ finally:
     if call('status')['recording']:
         call('action/record_stop',{})
     settings(original)
-    call('ai',dict(objects=True,faces=False,qr=False,motion=False,interval_ms=350))
+    call('ai',original_analysis)
     call('track',{'roi':None})
     (OUT/'hardware-results.json').write_text(json.dumps(results,indent=2))
 assert all(r['ok'] for r in results), 'Some hardware checks failed; see artifacts/hardware-results.json'

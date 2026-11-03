@@ -16,7 +16,7 @@ args=parser.parse_args();destination=args.destination.resolve()
 if destination==ROOT or ROOT in destination.parents:parser.error('Use a separate directory outside the project')
 if destination.exists() and any(destination.iterdir()):parser.error('Destination must be absent or empty')
 files=[]
-for name in ['README.md','VALIDATION.md','THIRD_PARTY.md','LICENSE','.gitignore','requirements-host.txt',
+for name in ['README.md','VALIDATION.md','THIRD_PARTY.md','LICENSE','.gitignore','.gitattributes','requirements-host.txt',
              'start-studio.sh','stop-studio.sh','deploy-studio.sh','start-video.sh','stop-video.sh','view-video.sh','diagnose-netboot.sh']:
     files.append(ROOT/name)
 for directory in ['camera_app','airlink','tests','tools','docs','.github','output/pdf']:

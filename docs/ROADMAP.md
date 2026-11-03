@@ -2,7 +2,7 @@
 
 ## Regression after future Pi 5 changes
 
-The current version has completed functional and ten-minute Pi 5 regression; see [the measured report](HARDWARE_REGRESSION_2026-11-03.md). Physical cold boot, a longer thermal run and real-camera RTP remain next milestones. Repeat these checks after future changes.
+The current version has completed functional and ten-minute Pi 5 regression; see [the measured report](HARDWARE_REGRESSION_2026-11-03.md). Real-camera RTP is integrated; see [the transport report](RTP_VALIDATION_2026-11-03.md). Physical cold boot and radio trials remain separate milestones. Repeat these checks after future changes.
 
 1. Preserve its existing bootable card and deployed baseline. Back up private settings/media separately; they are not in the public repository.
 2. Verify the detected sensor (`rpicam-hello --list-cameras`) and confirm no second capture process.
@@ -10,7 +10,7 @@ The current version has completed functional and ten-minute Pi 5 regression; see
 4. Verify resolution, exposure/gain/AWB, AF states, zoom, Pi5 processing HDR, full photo, recording and overlays. Compare MP4 decode counts and sidecar data.
 5. Repeat the ten-minute soak, watchdog/process recovery and source reconnect tests. Check the new host presets and switching back from Simulator to hardware.
 6. Test a clean shutdown and physical cold boot. Previous software reboot success does not cover power removal.
-7. Integrate a single H.264 encoder output with RTP fanout; run camera-to-native-view on Ethernet before RF.
+7. Repeat the single-encoder RTP/recording tests on Ethernet before any RF deployment.
 
 ## Pi 3 Model A+ constraints
 

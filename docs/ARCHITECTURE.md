@@ -19,7 +19,7 @@ flowchart LR
 
 `configuration.py` supplies shared validation. `engine.py` owns physical camera commands, capture, encoding, analysis and watchdog recovery. `offline.py` owns software capture/replay and uses the same API. Its capture and vision loops are independent; latest frames replace older analysis work. `vision.py` implements CPU algorithms and normalized boxes. `recording.py` uses a bounded four-frame host encoder queue, with drop/error counters. `benchmark.py` processes a bounded file job with separate Vision state.
 
-The physical engine remains a single camera owner. Do not start a second Picamera2/rpicam/OpenHD capture process alongside it. The standalone air-link tools currently consume test video or already encoded H.264 bytes; they do not acquire the camera or modify the backend.
+The physical engine remains a single camera owner. Do not start a second Picamera2/rpicam/OpenHD capture process alongside it. The backend fans one encoder output into recording and RTP through `encoded_outputs.py`. `rtp.py` packetizes existing H.264 bytes and sends through a bounded nonblocking socket; it never acquires the sensor. The standalone transport tools also accept synthetic or already encoded video.
 
 ## API contract
 
@@ -36,6 +36,9 @@ Host at localhost:8765; Pi camera API at private-address:8081. POSTs to the host
 | `/stream.mjpg` | GET | Multipart JPEG preview |
 | `/api/frame.jpg` | GET | Latest preview JPEG |
 | `/api/settings` | POST | Validated partial camera settings |
+| `/api/transport` | POST | `{enabled:true,host,port?,mtu?}` or `{enabled:false}`; real Pi only |
+| `/api/clock` | GET | Unix/monotonic nanoseconds for software clock calibration |
+| `/latency-target` | GET | Host browser optical-test timer, no automatic latency result |
 | `/api/ai` | POST | objects/faces/qr/motion booleans, confidence, interval_ms |
 | `/api/track` | POST | `{roi:{x,y,w,h}}` normalized coordinates; null clears |
 | `/api/action/<name>` | POST | snapshot, snapshot_full, record_start, record_stop, restart, autofocus |

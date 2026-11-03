@@ -32,13 +32,14 @@ Open **http://127.0.0.1:8765/**. A fresh installation starts in **Simulator** mo
 | Objects / faces / QR / motion / ROI tracking | Pi CPU | Ubuntu CPU |
 | Presets, profile selection and exports | Controlled from Ubuntu | Same host application |
 | File import, playback pause/seek, analysis reports | Host lab remains available | Supported locally |
-| Airborne radio video | Integration pending | Actual H.264/RTP localhost test provided |
+| Camera H.264/RTP | Pi 5 Ethernet implemented | One encoder, recording fanout, native host decode |
+| Airborne radio video | RF hardware pending | WFB-ng integration contract and diagnostic tools |
 
 The tested sensor is **Sony IMX708**, identified by the camera stack; the board label supplied was Arducam UC-b47 rev B. Do not infer an AI accelerator from that board label. The application uses CPU vision. The separate GigE Vision camera is neither discovered nor configured.
 
 ## Verification status
 
-The current version was redeployed on Pi 5 and passed 18 functional hardware checks plus five known-input CV checks. A ten-minute stream had no errors and held 30.0-30.1 capture FPS after startup; its initial 22.3 FPS sample failed the original strict minimum-rate assertion and is explicitly retained in the [current hardware report](docs/HARDWARE_REGRESSION_2026-11-03.md). The offline suite passes 12 host tests, including full MP4 decoding and H.264/RTP loopback. Pi 3 A+, RF performance and optical end-to-end latency remain unverified. See [validation evidence and limits](VALIDATION.md).
+The current version was redeployed on Pi 5 and passed 18 functional hardware checks plus five known-input CV checks. A ten-minute stream had no errors and held 30.0-30.1 capture FPS after startup; its initial 22.3 FPS sample failed the original strict minimum-rate assertion and is explicitly retained in the [current hardware report](docs/HARDWARE_REGRESSION_2026-11-03.md). The offline suite passes 18 tests, including full MP4 decoding and H.264/RTP loopback. Pi 3 A+, RF performance and optical end-to-end latency remain unverified. See [validation evidence and limits](VALIDATION.md).
 
 ## Documentation
 
@@ -72,3 +73,5 @@ output/pdf/       Rendered technical guide
 ```
 
 Runtime secrets, recordings, local inputs, known host keys, logs, caches and intermediate build files are excluded. The Pi API uses a private shared token over a trusted LAN; the host binds to localhost. This is a local development application, not an Internet-facing multiuser camera service.
+
+See [real camera RTP validation](docs/RTP_VALIDATION_2026-11-03.md), [air-link setup](docs/AIRLINK.md) and [installation bundle / boot strategy](docs/INSTALLATION_BUNDLE.md). The software archive is reproducible and sanitized; it is not a bootable OS image.

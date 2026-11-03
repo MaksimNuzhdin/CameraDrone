@@ -13,6 +13,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.serving import make_server
 
 from host_services import CameraManager
+from version import VERSION
 
 BASE=Path(__file__).resolve().parent
 
@@ -46,6 +47,9 @@ def create_host_app(directory=None, seed_inputs=False, runtime_path=None):
 
     @app.get('/')
     def index():return render_template('index.html')
+
+    @app.get('/latency-target')
+    def latency_target():return render_template('latency.html')
 
     @app.get('/api/host')
     def host_info():return jsonify(manager.describe())
@@ -103,7 +107,7 @@ def create_host_app(directory=None, seed_inputs=False, runtime_path=None):
         return send_from_directory(manager.benchmarks.directory,filename,as_attachment=True)
 
     @app.get('/api/health')
-    def health():return jsonify(application='Camera Studio',version='0.2.0',source=manager.mode,hardware_connected=None)
+    def health():return jsonify(application='Camera Studio',version=VERSION,source=manager.mode,hardware_connected=None)
 
     def forward(path,streaming=False,inline=False):
         started=time.monotonic();epoch=manager.generation
@@ -151,7 +155,7 @@ def create_host_app(directory=None, seed_inputs=False, runtime_path=None):
 
     @app.route('/api/<path:path>',methods=['GET','POST'])
     def camera_proxy(path):
-        allowed={'GET':{'status','frame.jpg','media'},'POST':{'settings','ai','track','action/snapshot','action/snapshot_full',
+        allowed={'GET':{'status','frame.jpg','media','clock'},'POST':{'settings','ai','track','transport','action/snapshot','action/snapshot_full',
                      'action/record_start','action/record_stop','action/restart','action/autofocus'}}
         if path not in allowed[request.method] and not (request.method=='GET' and path.startswith('media/') and '/' not in path[6:]):
             return jsonify(error='Unknown API route'),404

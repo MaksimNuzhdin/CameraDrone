@@ -7,7 +7,7 @@ const schema = [
     ['fps','Capture FPS','select', [[10,'10'],[15,'15'],[20,'20'],[25,'25'],[30,'30']]],
     ['preview_fps','Preview FPS','select', [[5,'5'],[10,'10'],[15,'15'],[20,'20'],[30,'30']]],
     ['jpeg_quality','Preview quality','range',35,95,5],
-    ['record_bitrate','Recording bitrate','select',[[1000000,'1 Mbit/s'],[1500000,'1.5 Mbit/s'],[2000000,'2 Mbit/s'],[4000000,'4 Mbit/s'],[8000000,'8 Mbit/s'],[16000000,'16 Mbit/s']]],
+    ['record_bitrate','Encoder bitrate','select',[[1000000,'1 Mbit/s'],[1500000,'1.5 Mbit/s'],[2000000,'2 Mbit/s'],[4000000,'4 Mbit/s'],[8000000,'8 Mbit/s'],[16000000,'16 Mbit/s']]],
     ['rotation','Rotation','select',[[0,'0°'],[180,'180°']]],
     ['zoom','Digital zoom','range',1,4,.1]
   ]],
@@ -89,7 +89,7 @@ function syncControls(s){
   for(const key of ['red_gain','blue_gain']){$('group-'+key).classList.toggle('disabled',s.AwbEnable);$('control-'+key).disabled=s.AwbEnable;}
   $('group-LensPosition').classList.toggle('disabled',s.AfMode!==0);
   $('control-LensPosition').disabled=s.AfMode!==0;
-  if(status)applySourceStatus(status);
+  if(status){applySourceStatus(status);if(status.recording||status.transport?.active)for(const key of ['resolution','fps','rotation','HdrMode','record_bitrate'])$('control-'+key).disabled=true;}
 }
 function text(id,value){$(id).textContent=value;}
 function update(s){
@@ -124,9 +124,10 @@ function update(s){
   if(!initialized){syncControls(s.settings);initialized=true;}
   const rec=Boolean(s.recording);$('record-badge').hidden=!rec; text('record-label',rec?'Stop recording':'Record video');$('record').classList.toggle('selected',rec);
   if(rec)text('record-seconds',Math.floor(s.recording.seconds/60)+':'+String(Math.floor(s.recording.seconds%60)).padStart(2,'0'));
-  for(const k of ['resolution','fps','rotation','HdrMode','record_bitrate'])$('control-'+k).disabled=rec;
-  $('snapshot-full').disabled=rec||s.hardware===false;
-  $('restart-camera').disabled=rec;
+  const encoding=rec||Boolean(s.transport?.active);
+  for(const k of ['resolution','fps','rotation','HdrMode','record_bitrate'])$('control-'+k).disabled=encoding;
+  $('snapshot-full').disabled=encoding||s.hardware===false;
+  $('restart-camera').disabled=encoding;
   const track=a.tracking||{};$('clear-track').hidden=!track.active;text('track-status',!track.active?'Inactive':track.lost?'Target lost':`Tracking · ${Math.round(track.confidence*100)}%`);
   $('detections').replaceChildren();
   const stale=s.analysis_age_ms>Math.max(2000,s.ai_options.interval_ms*3);
@@ -141,6 +142,7 @@ function update(s){
   if(document.activeElement!==$('confidence')){$('confidence').value=s.ai_options.confidence*100;text('confidence-value',Math.round(s.ai_options.confidence*100)+'%');}
   if(document.activeElement!==$('interval'))$('interval').value=s.ai_options.interval_ms;
   applySourceStatus(s);
+  updateTransport(s);
   $('autofocus').disabled=!s.controls.AfMode;
   if(!s.controls.AfMode){$('control-AfMode').disabled=true;$('control-LensPosition').disabled=true;}
 }
@@ -222,6 +224,7 @@ async function loadHost(){
   optionList($('source-input'),hostInfo.inputs);
   optionList($('benchmark-input'),hostInfo.inputs);
   optionList($('performance-profile'),hostInfo.profiles);
+  if(!$('rtp-host').value&&hostInfo.ground_ip)$('rtp-host').value=hostInfo.ground_ip;
   profileDescription();sourceForm();
   const data=await api('presets');optionList($('saved-preset'),data.presets);
 }
@@ -251,7 +254,7 @@ function applySourceStatus(s){
     }
   }
   for(const button of document.querySelectorAll('[data-preset]'))if(button.dataset.preset!=='default')button.disabled=!s.hardware;
-  $('apply-source').disabled=Boolean(s.recording);
+  $('apply-source').disabled=Boolean(s.recording||s.transport?.active);
   $('playback-controls').hidden=source.kind!=='replay';
   if(source.kind==='replay'&&s.playback){
     const p=s.playback;const duration=p.duration_s||0;
@@ -333,3 +336,17 @@ async function reports(){
     $('benchmark-reports').append(card);
   }
 }
+
+function updateTransport(s){
+  const t=s.transport||{supported:false,active:false}, supported=s.hardware&&t.supported;
+  text('rtp-state',!supported?'Requires Raspberry Pi':t.active?'RTP sending':'RTP stopped');
+  $('rtp-start').disabled=!supported||t.active;$('rtp-stop').disabled=!supported||!t.active;
+  for(const id of ['rtp-host','rtp-port','rtp-mtu'])$(id).disabled=!supported||t.active;
+  if(t.active&&t.options){$('rtp-host').value=t.options.host;$('rtp-port').value=t.options.port;$('rtp-mtu').value=t.options.mtu;}
+  const c=t.stats;
+  text('rtp-summary',c?`${c.frames} frames · ${c.packets} packets sent · ${c.payload_mbit_s} Mbit/s · ${c.dropped_packets} local send drops${c.error?' · '+c.error:''}`:'Start a receiver before enabling transmission.');
+  const host=$('rtp-host').value||'127.0.0.1', port=$('rtp-port').value||5600;
+  text('rtp-command',`python3 airlink/video.py receive --host ${host} --port ${port} --profile pi5-candidate`);
+}
+$('rtp-start').onclick=()=>run(async()=>{await api('transport',{enabled:true,host:$('rtp-host').value.trim(),port:Number($('rtp-port').value),mtu:Number($('rtp-mtu').value)});await poll();toast('RTP sender started. Check the ground receiver.');});
+$('rtp-stop').onclick=()=>run(async()=>{await api('transport',{enabled:false});await poll();toast('RTP sender stopped');});

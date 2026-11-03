@@ -69,3 +69,14 @@ Do not remove storage while the Pi is running. Use a clean shutdown before physi
 - **Pi temperature:** ensure active cooling and adequate power. Preview/AI workload caps help but do not replace cooling.
 
 Host MP4 requires a clean stop to finalize. The Pi backend also handles SIGTERM and finalizes its encoder through the capture owner before exit; deploy the generated Pi unit with `KillMode=mixed` so its FFmpeg child is not killed prematurely. SIGTERM and Ctrl-C trigger host cleanup. The generated host service uses `KillMode=mixed` and `TimeoutStopSec=30` so Python can finalize its encoder before systemd terminates remaining children. Abrupt power loss can damage an unfinished recording. The Pi baseline uses a different fragmented-MP4 output path; its existing resilience does not prove SD-card or power-loss safety.
+
+## Decoder measurement dependencies
+
+The native receiver requires the GStreamer packages above. The optional quantitative monitor additionally uses the distribution Python bindings:
+
+```bash
+sudo apt install python3-gi gir1.2-gstreamer-1.0 python3-requests
+/usr/bin/python3 airlink/monitor.py --help
+```
+
+A virtualenv may not expose system `gi`; use `/usr/bin/python3` for this monitor. Installation archives, fresh-board checks and the distinction between software deployment and a bootable image are described in [Installation bundle](INSTALLATION_BUNDLE.md).

@@ -4,6 +4,7 @@ import ipaddress
 import json
 import re
 import secrets
+import socket
 import threading
 import uuid
 from pathlib import Path
@@ -76,7 +77,12 @@ class CameraManager:
     def endpoint(self):return self.camera_url if self.mode=='pi' else self.local_url
 
     def describe(self):
-        return dict(mode=self.mode,epoch=self.generation,camera_url=self.camera_url,
+        ground_ip=None
+        try:
+            with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as route:
+                route.connect((urlparse(self.camera_url).hostname,8081));ground_ip=route.getsockname()[0]
+        except OSError:pass
+        return dict(ground_ip=ground_ip,mode=self.mode,epoch=self.generation,camera_url=self.camera_url,
                     inputs=self.library.list(),profiles=[dict(id=k,**v) for k,v in self.profiles.items()],
                     source_name='Raspberry Pi camera' if self.mode=='pi' else self.offline.source['name'])
 
@@ -105,7 +111,7 @@ class CameraManager:
                 current=self.json_request('GET','/api/status')
             except (RuntimeError,ValueError):
                 current={}
-            if current.get('recording'):raise ValueError('Stop recording before changing source')
+            if current.get('recording') or current.get('transport',{}).get('active'):raise ValueError('Stop recording and RTP before changing source')
             if mode=='pi':self.offline.set_active(False)
             else:self.offline.switch(mode,values.get('input_id'))
             self.camera_url=url;self.mode=mode;self.generation+=1
@@ -145,7 +151,7 @@ class CameraManager:
         if current.get('supported_settings') is not None:
             skipped=sorted(set(camera)-set(current['supported_settings']))
             camera={k:v for k,v in camera.items() if k in current['supported_settings']}
-        if current.get('recording'):raise ValueError('Stop recording before applying a complete profile')
+        if current.get('recording') or current.get('transport',{}).get('active'):raise ValueError('Stop recording and RTP before applying a complete profile')
         applied=False
         try:
             if camera:self.json_request('POST','/api/settings',camera);applied=True

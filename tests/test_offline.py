@@ -78,6 +78,9 @@ class HostTests(unittest.TestCase):
         import requests
         self.assertEqual(requests.get(self.manager.local_url+'/api/status',timeout=3).status_code,401)
         self.assertEqual(self.client.get('/api/frame.jpg').status_code,200)
+        self.assertGreater(self.client.get('/api/clock').get_json()['unix_ns'],0)
+        self.assertEqual(self.client.get('/latency-target').status_code,200)
+        self.post('/api/transport',{'enabled':True,'host':'127.0.0.1'},400)
         with self.client.get('/stream.mjpg',buffered=False) as response:
             self.assertIn(b'Content-Type: image/jpeg',next(response.response))
     def test_02_settings_qr_and_hardware_rejection(self):

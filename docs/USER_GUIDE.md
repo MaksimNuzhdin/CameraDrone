@@ -37,3 +37,11 @@ The **Lab** tab analyzes a saved host input regardless of the active preview sou
 Capture FPS and preview FPS are independent. An idle source generates JPEGs at at most 2 FPS until a viewer connects. The Pi may cap preview/analysis at high temperature. Host frame age and HTTP round-trip time are not optical glass-to-glass latency. Offline sources show no fabricated sensor temperature, gain or focus metadata.
 
 The browser UI, diagnostics and all project documentation are in English. No cloud service receives camera frames.
+
+## Link and native video
+
+Select the physical Raspberry Pi source, then open **Link**. Start the native receiver command shown there on Ubuntu. Set its explicit receiver IPv4 address, port and MTU, then click **Start RTP**. Confirm the active state and increasing frame/packet counters. Click **Stop RTP** to release the sender. Simulator and Replay reject physical RTP transmission.
+
+The same encoder can serve recording and RTP simultaneously. Stopping one keeps the other active. Format, rate, HDR, rotation, bitrate, full-sensor capture, restart and source selection stay locked while encoding. Exposure/white balance and AI options can still be adjusted. A camera service restart does not automatically resume network transmission.
+
+The **Latency target** link opens a changing visual timer for a later optical measurement. Aim the physical camera at the host display and use an independent high-speed reference to compare source and received views. The browser timer alone does not measure latency. Software decoder measurements are documented separately and exclude sensor/encoding/display delay.

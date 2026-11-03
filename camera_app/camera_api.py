@@ -1,9 +1,11 @@
 """The same camera API contract serves real hardware and offline sources."""
 import hmac
 import json
+import time
 from pathlib import Path
 from flask import Flask, Response, jsonify, request, send_from_directory
 from storage import atomic_json
+from version import VERSION
 
 
 def create_camera_app(engine, token):
@@ -36,9 +38,23 @@ def create_camera_app(engine, token):
         return jsonify(error=str(exc)), 500
 
 
+    @app.get('/api/clock')
+    def clock():
+        return jsonify(unix_ns=time.time_ns(),monotonic_ns=time.monotonic_ns())
+
+    @app.post('/api/transport')
+    def transport():
+        if not getattr(engine,'supports_rtp',False):raise ValueError('RTP requires the real Pi camera')
+        values=request.get_json()
+        if not isinstance(values,dict) or not isinstance(values.get('enabled'),bool):raise ValueError('enabled must be boolean')
+        options={k:v for k,v in values.items() if k!='enabled'}
+        if not values['enabled'] and options:raise ValueError('Stop RTP with enabled=false only')
+        return jsonify(engine.submit('rtp_start',options) if values['enabled'] else engine.submit('rtp_stop'))
+
     @app.get('/api/status')
     def status():
-        return jsonify(engine.get_status())
+        value=engine.get_status();value['api_version']=VERSION
+        return jsonify(value)
 
 
     @app.get('/stream.mjpg')

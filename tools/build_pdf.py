@@ -62,7 +62,7 @@ def parse(path):
                       '  ->  Pi API / Picamera2 / ISP / Pi vision\n\n'
                       'Air link target: one camera -> H.264 -> RTP -> WFB\n'
                       '  ->  ground RTP decoder -> native display\n'
-                      'Radio + camera encoder fanout: hardware integration pending')
+                      'Camera encoder fanout validated on Ethernet; RF pending')
             else:text='\n'.join(code)
             wrapped=[]
             for row in text.splitlines():wrapped.extend(textwrap.wrap(row,88,replace_whitespace=False,drop_whitespace=False) or [''])
@@ -94,15 +94,15 @@ def footer(canvas,doc):
 
 story=[Spacer(1,32),para('CAMERADRONE','h1'),para('Camera Studio engineering guide','h2'),
        para('Ubuntu host application - Raspberry Pi camera - offline development - airborne video preparation'),
-       Spacer(1,12),para('Release 0.2 / 3 November 2026'),
-       para('Ubuntu offline validation and current Pi 5 hardware regression are documented separately, including startup-rate observations and a recording shutdown fix. Radio integration and Pi 3 A+ performance remain unverified.'),Spacer(1,12)]
+       Spacer(1,12),para('Release 0.3 / 3 November 2026'),
+       para('Real Pi 5 capture, AI, recording and single-encoder H.264/RTP fanout are documented with measured Ethernet decoder results. Radio hardware, optical latency and Pi 3 A+ performance remain unverified.'),Spacer(1,12)]
 shot=ROOT/'docs/images/offline-studio.png'
 if shot.exists():
     w,h=ImageReader(str(shot)).getSize();story.append(Image(str(shot),width=WIDTH,height=WIDTH*h/w))
 story+=[Spacer(1,8),para('Synthetic preview only. No real camera imagery or credentials are included.','cell'),PageBreak()]
 chapters=[('Quick start','README.md'),('Setup and deployment','docs/SETUP.md'),('Application workflow','docs/USER_GUIDE.md'),
           ('Architecture and API','docs/ARCHITECTURE.md'),('Airborne transport','docs/AIRLINK.md'),('Validation and limits','VALIDATION.md'),
-          ('Current Pi 5 regression','docs/HARDWARE_REGRESSION_2026-11-03.md'),('Hardware roadmap','docs/ROADMAP.md'),('Third-party components','THIRD_PARTY.md'),('Public release workflow','docs/PUBLISHING.md')]
+          ('Current Pi 5 regression','docs/HARDWARE_REGRESSION_2026-11-03.md'),('Real camera RTP validation','docs/RTP_VALIDATION_2026-11-03.md'),('Installation and boot strategy','docs/INSTALLATION_BUNDLE.md'),('Hardware roadmap','docs/ROADMAP.md'),('Third-party components','THIRD_PARTY.md'),('Public release workflow','docs/PUBLISHING.md')]
 story += [para('Guide contents','h1')]
 for number,(title,path) in enumerate(chapters,1):story.append(para(f'{number:02d}  {title}'))
 story += [Spacer(1,20),para('Source of truth','h2'),para('This guide is generated from the Markdown documents in the repository. Shell examples use the repository working directory. Use your virtualenv Python where appropriate. Local addresses shown in examples are placeholders; private runtime files and test recordings are intentionally absent.'),

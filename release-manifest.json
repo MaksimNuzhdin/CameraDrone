@@ -23,8 +23,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4861,
-      "sha256": "3fd87e2c4d4b9a4cff6578b46ecd7d4c371d2dabe897e054004b3c57dbe8577b"
+      "bytes": 5224,
+      "sha256": "f834e560c085d3ae57b79f48f0f02e3dc490459cb6b27d15317502cc94e42963"
     },
     {
       "path": "THIRD_PARTY.md",
@@ -33,8 +33,13 @@
     },
     {
       "path": "VALIDATION.md",
-      "bytes": 10837,
-      "sha256": "01fe84bd79d82cccb70c9291aa082f6d9ebee1aad5cd152cf79d5a40e12a6d43"
+      "bytes": 11293,
+      "sha256": "52a50dbd1d5136a02701dc9451ceacef7b35b746c6830980b377932a9a958a6a"
+    },
+    {
+      "path": "airlink/budget.py",
+      "bytes": 1507,
+      "sha256": "f967be6b8787e02f05f797005435220c2e8a7d4e791e8e48bb9ae5a7243af6da"
     },
     {
       "path": "airlink/diagnose.py",
@@ -42,14 +47,29 @@
       "sha256": "d182349533ce400f03adb82ed1fa613c5fd4fd95760014d081ebd84cb0be0922"
     },
     {
+      "path": "airlink/impair.py",
+      "bytes": 2339,
+      "sha256": "03ee77ba7993303bb456a331dc02dabf933c0e37682306d19dbd3bb8e21bce1f"
+    },
+    {
+      "path": "airlink/monitor.py",
+      "bytes": 7287,
+      "sha256": "2329c6c7ffbd3fef306d43cfb4007bcd6c2dc5c6a206e293f961fe49ee656abe"
+    },
+    {
       "path": "airlink/profiles.json",
       "bytes": 303,
       "sha256": "e133eb37970fab5232b2617fd60fc7169e301347ad97eee69d2b45de4fb50218"
     },
     {
+      "path": "airlink/timing.py",
+      "bytes": 1484,
+      "sha256": "0d8b3a918b130a329217c0b958b12d246377f65e6e80f53d4fa8cd2ac70f8b30"
+    },
+    {
       "path": "airlink/video.py",
-      "bytes": 2823,
-      "sha256": "1f4fde18dd6c320a1f8bc5b1f2d2206fb01181a7849ac71692df252f5bd9c677"
+      "bytes": 2962,
+      "sha256": "9258096a0aa5fc2a27dbbde6b0a5e0ba575dffeb4169ee09f4bf79c7c1fa4026"
     },
     {
       "path": "camera_app/backend.py",
@@ -78,8 +98,8 @@
     },
     {
       "path": "camera_app/camera_api.py",
-      "bytes": 3815,
-      "sha256": "ee474391b41e8d6b4490ba25d772fd58defa54dbb5f4ca415e8c1c9c943fd398"
+      "bytes": 4623,
+      "sha256": "9378bb8bd38c4dc689510fe0f58663a576cee81fbfa9915fb5c7313d647af98f"
     },
     {
       "path": "camera_app/configuration.py",
@@ -87,9 +107,14 @@
       "sha256": "d67d1b995845e97acdb886d402c8fd07d2232c7e6d925b519f46993549f1f74e"
     },
     {
+      "path": "camera_app/encoded_outputs.py",
+      "bytes": 1510,
+      "sha256": "795ffadd7c5ee06865db1d7fa1c9b174177b3429eacb4deb282e1e9291809e3b"
+    },
+    {
       "path": "camera_app/engine.py",
-      "bytes": 24468,
-      "sha256": "a7897b88bf6ef8aa847153c58136deae29273f208734461d74441d7340ae1626"
+      "bytes": 27196,
+      "sha256": "8c0be5557b7167ca04ec5130fb17fd211f4eaa12207879e8d33a1b42a5a0d6b4"
     },
     {
       "path": "camera_app/fetch_models.py",
@@ -98,13 +123,13 @@
     },
     {
       "path": "camera_app/host.py",
-      "bytes": 8161,
-      "sha256": "e979716df4d54cfc57bbac774c6fd7dc88277f3f613506d3b6ea7e8fb7b400bd"
+      "bytes": 8306,
+      "sha256": "2910503a45596565f9305a2aa3750dc9089e88f948c4017ad3817664bcef790e"
     },
     {
       "path": "camera_app/host_services.py",
-      "bytes": 8702,
-      "sha256": "e4c0e574ee827723b925d0e8239020edc43944fe655124cf5a33ca573209cd3b"
+      "bytes": 9087,
+      "sha256": "92fcd9775614bb741a5539b7237dd452b1b97582e50c608477adac51226a038b"
     },
     {
       "path": "camera_app/models/LICENSE.MobileNet-SSD",
@@ -142,14 +167,19 @@
       "sha256": "effaf2ebc721f5a9c97b571e2d2fdeaf14168b5eb2cd66fa82bf2577a458b6be"
     },
     {
+      "path": "camera_app/rtp.py",
+      "bytes": 4909,
+      "sha256": "5c503953e5862c28fd1bbebd768f84bfc8601190e56f789a39b8d969cd566089"
+    },
+    {
       "path": "camera_app/static/app.js",
-      "bytes": 27890,
-      "sha256": "6ea82228ee1824dc10fb3910c850fb563bffb19c53514c0fac6569e12b85dfb0"
+      "bytes": 29573,
+      "sha256": "c11c385444468fef0e05cd1c1c60cab38bd6adb14b8291b652037c52bac380dc"
     },
     {
       "path": "camera_app/static/style.css",
-      "bytes": 11192,
-      "sha256": "fd5af6fc9f2e7273f487e9ada2db410de107ee21005dbd578d632006b5589d08"
+      "bytes": 11372,
+      "sha256": "db779022d8678b519f11c104a99880a1c4d885d99f4d5d882ad326c088e5c756"
     },
     {
       "path": "camera_app/storage.py",
@@ -158,8 +188,18 @@
     },
     {
       "path": "camera_app/templates/index.html",
-      "bytes": 10423,
-      "sha256": "6a45402a5475a830fbafbec4b0f7b3f349f6f37cb952c09165522aa51ecb290c"
+      "bytes": 12090,
+      "sha256": "ad3241631d3bc0df86a9753acc6225cf7687a1c0a457283aef5c0ca51f9b8f95"
+    },
+    {
+      "path": "camera_app/templates/latency.html",
+      "bytes": 2105,
+      "sha256": "81c9a72bb12bb9874b4313855f815352bc014cd70ac1b90844d8693f8b70a743"
+    },
+    {
+      "path": "camera_app/version.py",
+      "bytes": 51,
+      "sha256": "f593b4ee2af1b7da2e23fa37cc6d8981ecf3083dafcb791ff3e1219ca2bf5945"
     },
     {
       "path": "camera_app/vision.py",
@@ -178,13 +218,13 @@
     },
     {
       "path": "docs/AIRLINK.md",
-      "bytes": 7342,
-      "sha256": "fa9970b06259cf816995b3881adf630de66bc7eb820361d896a0b5318af5a5a2"
+      "bytes": 10496,
+      "sha256": "6e89c4e8f24167e417b02a83d50cac9900f7cf753237bd182de6ca0fea883f9c"
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "bytes": 5871,
-      "sha256": "41ade7090bac088ede1ffccc53480530ac6fa23a4313132d171e31ede31709ca"
+      "bytes": 6285,
+      "sha256": "2247eaf6a1219e805c6e5aa082ddd0595b5b077c52e4d0d449e3957d4410ba68"
     },
     {
       "path": "docs/HARDWARE_REGRESSION_2026-11-03.md",
@@ -192,24 +232,39 @@
       "sha256": "8688d4e4cb4d01144efa0a0c3a9458452fc2481debbad9e0ebd35539507e5238"
     },
     {
+      "path": "docs/INSTALLATION_BUNDLE.md",
+      "bytes": 4509,
+      "sha256": "aef1794c3193ea41490fc29704272131ae27ed0ada40e10b57ea605817097fde"
+    },
+    {
       "path": "docs/PUBLISHING.md",
-      "bytes": 1945,
-      "sha256": "d6745b962dbd7d45827cec99633a9d1a304cc91272132c30f22c73d07f431a83"
+      "bytes": 2118,
+      "sha256": "55e0611c83305ef9b7e7a09d02948320785fdc763df2a1d644e348bd8e002cdb"
     },
     {
       "path": "docs/ROADMAP.md",
-      "bytes": 4035,
-      "sha256": "a41cf4778efe8dbe1019f5161cecb749b75ef62c3627686d9e246e709bc0a7d1"
+      "bytes": 4081,
+      "sha256": "30aa39dea925c03e6a0c83f781c4b339dd3cf57f84f68e236c4825735ed9905e"
+    },
+    {
+      "path": "docs/RTP_VALIDATION_2026-11-03.md",
+      "bytes": 7172,
+      "sha256": "c8f530465c8b26bdbf1cfa95bd7ad8968e2261a567e9af55efe535fc5b31000a"
     },
     {
       "path": "docs/SETUP.md",
-      "bytes": 5856,
-      "sha256": "7778e78284c2ce6d3cc0885d6281c07b60dc4915cbb7e4950ff96b1a95082bad"
+      "bytes": 6419,
+      "sha256": "529e9c70170d027589d9446a675ec64be1e112b88b50bb18e48a20aea2c4b739"
     },
     {
       "path": "docs/USER_GUIDE.md",
-      "bytes": 4635,
-      "sha256": "bfb205a7c6ab1ce4aba174780aef6969db84a39140d2fcf3ecb6b2bc50cdcf21"
+      "bytes": 5740,
+      "sha256": "e0cb2f77037e0ea02b6da82d55b6f96becee513f23c4c3e28ef7de3434a2d301"
+    },
+    {
+      "path": "docs/images/latency-target.png",
+      "bytes": 71263,
+      "sha256": "2456ab4aed8a6ab96a46c29d9ea8188c30c96080bdca1aca1784c863e680d904"
     },
     {
       "path": "docs/images/offline-studio.png",
@@ -218,8 +273,8 @@
     },
     {
       "path": "output/pdf/CameraDrone-Guide.pdf",
-      "bytes": 218555,
-      "sha256": "1fddc7a6545870009a2732b4ea2a569ef3fa3de6c8c8478dcf3160ce1adacc0c"
+      "bytes": 237691,
+      "sha256": "2126423f6884da14e6a822cc8310fbb505f13253effa27ac79e0bab5c1122a70"
     },
     {
       "path": "requirements-host.txt",
@@ -263,13 +318,33 @@
     },
     {
       "path": "tests/test_airlink.py",
-      "bytes": 1717,
-      "sha256": "5aa83a5ceefc1480fddb6736dac9a77ce24c9339052364642b40d91f654cc7f2"
+      "bytes": 3877,
+      "sha256": "36cee9520a5130fe6c24b72d3e1069ae3c7770b0660c6c73c1ad46adca955a76"
     },
     {
       "path": "tests/test_offline.py",
-      "bytes": 9493,
-      "sha256": "253d1179e3b1f414fd4b949030e18dc1ca33378f643622572c9af049991565ed"
+      "bytes": 9728,
+      "sha256": "f062e293eb822a9f0140f14e81e7960cfb91474162896605069323f188846db0"
+    },
+    {
+      "path": "tests/test_rtp.py",
+      "bytes": 2073,
+      "sha256": "c4b723a905dc74718fffaa5ee9e23459f660981bf3d8c5cdc495d9a9a39f9b31"
+    },
+    {
+      "path": "tests/test_timing.py",
+      "bytes": 1068,
+      "sha256": "24c86b921a5f9f9830bfd62bb8396355d56e56d1b6b82bcd68a24dc0acfe65a3"
+    },
+    {
+      "path": "tests/transport_check.py",
+      "bytes": 3039,
+      "sha256": "c4464ba71438b433a7cd6cf717ce910264b823a584bf93a5415637120da5ecad"
+    },
+    {
+      "path": "tests/transport_soak.py",
+      "bytes": 5967,
+      "sha256": "f13712db10a86ef5ff375349976bcba5c87b7a971fa59de4d61dc757b3e30fad"
     },
     {
       "path": "tests/vision_check.py",
@@ -278,8 +353,18 @@
     },
     {
       "path": "tools/build_pdf.py",
-      "bytes": 7893,
-      "sha256": "d3f3a5e07924a93bb3436d4b417c44134ca709220570632acd0214f7b4ced9f7"
+      "bytes": 8003,
+      "sha256": "4cd268178e26503665ec0a6282eb36800e122b9e85b4a6061c1ab4e04433c069"
+    },
+    {
+      "path": "tools/build_release.py",
+      "bytes": 1492,
+      "sha256": "5422c4344054d0c42b07064264391d658c8083d2a34c4b1fe3b7c1320a0a1ca4"
+    },
+    {
+      "path": "tools/environment.py",
+      "bytes": 2190,
+      "sha256": "45b47f7b824ed2039a4999266573af14ccc014579f8bd5a9dac066dcd258ab78"
     },
     {
       "path": "tools/fetch_test_fixtures.py",
@@ -300,6 +385,11 @@
       "path": "tools/setup_host.py",
       "bytes": 1755,
       "sha256": "8e532f3b83225de562fd1121b02cf36140dddbd99f9a84546b28e4a9e35db486"
+    },
+    {
+      "path": "tools/setup_pi.py",
+      "bytes": 3817,
+      "sha256": "a872dfa7fb5c44df71f85236988d57f5953df4ef2dca3f4daf85223542e87730"
     },
     {
       "path": "view-video.sh",

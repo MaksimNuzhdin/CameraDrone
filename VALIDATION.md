@@ -112,7 +112,7 @@ and `artifacts/reboot-results.json`.
 
 ## Current Ubuntu offline extension (2026-11-03)
 
-The complete standard-library unittest suite passes **12 tests**:
+The initial offline extension passed **12 tests** (the RTP extension raises the current suite to **18**):
 
 | Check | Observed result |
 | --- | --- |
@@ -158,3 +158,7 @@ Hardware scripts `tests/hardware_check.py` and `tests/soak_check.py` change sett
 ### Remaining unverified behavior
 
 Physical cold boot and power loss, Pi3 encoder/driver/RAM suitability, actual RF adapter support, RF packet loss/FEC/recovery, optical latency, range, field accuracy, storage-exhaustion behavior and long-term 1080p operation still need physical tests. A localhost transport test does not establish any of those results.
+
+## Real Pi RTP extension (release 0.3)
+
+See [the dedicated transport report](docs/RTP_VALIDATION_2026-11-03.md) for single-encoder recording fanout, real Ethernet decode, timestamp latency methodology, controlled blackout and service-restart recovery. The current host suite has 18 passing tests. Software timestamp latency excludes exposure, ISP, encoding and display; it is not a replacement for an optical test.

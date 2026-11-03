@@ -4,7 +4,7 @@
 
 Use **H.264 over RTP/UDP** as the video contract. Keep browser MJPEG for local configuration. Prepare a dedicated **WFB-ng** air/ground radio link once compatible USB adapters are available. This is an architecture choice for later hardware evaluation, not an installed radio stack or a range guarantee.
 
-The repository implements synthetic RTP transmission, raw H.264 stdin packetization, a native ground receiver, conservative profiles and a read-only adapter/driver inventory. The loopback test actually encodes, packetizes, sends UDP, depacketizes and decodes video. It does not exercise RF or a Pi encoder.
+The repository implements real Pi camera H.264/RTP transmission, synthetic transmission, a native ground receiver, measured decoder monitoring, conservative profiles and a read-only adapter/driver inventory. Ethernet validation exercises the Pi encoder and actual host decoder. Radio hardware remains untested.
 
 ```mermaid
 flowchart LR
@@ -19,7 +19,34 @@ flowchart LR
   AI -. metadata/control tunnel .-> Studio[Camera Studio on Ubuntu]
 ```
 
-The encoded-stream fanout from `engine.py` is **not integrated yet**. The current recording path and the transport bench are separate. Integrate a single encoded output with bounded branches for RTP and recording when the board returns; avoid a second capture owner or a second expensive software encode. Preserve clean video and transmit low-rate detection metadata separately. For a first RF test, disable the browser MJPEG viewer over the radio.
+The Pi uses one camera owner and one H.264 encoder. `CameraOutputs` fans its encoded access units out to a nonblocking RTP sender and optional MP4 recorder. Starting/stopping either consumer preserves the other. Geometry, frame rate, HDR, rotation, bitrate, full-resolution capture and source changes are locked while encoding. Recording attached to an existing stream waits for the next IDR (up to about one second).
+
+## Real camera over Ethernet
+
+Start the receiver on the Ubuntu host:
+
+```bash
+python3 airlink/video.py receive --host YOUR_HOST_IPV4 --port 5600 --profile pi5-candidate
+```
+
+In Camera Studio select **Raspberry Pi**, open **Link**, enter that same receiver IPv4/port and click **Start RTP**. The browser remains an MJPEG configuration preview; the native receiver decodes H.264. The suggested receiver address comes from the host route to the explicitly selected Pi, without network scanning. Stop RTP before deploying or changing the encoding profile.
+
+The sender accepts explicit private/loopback IPv4 unicast addresses, ports 1024–65535 and RTP MTUs 256–1400 bytes. It does not discover cameras or alter network interfaces. Restarting the camera service leaves RTP **off**; explicitly enable it again after recovery. Plain UDP provides no encryption, retransmission or delivery guarantee.
+
+`RtpSender` implements Annex-B single-NAL and FU-A fragmentation according to [RFC 6184](https://www.rfc-editor.org/rfc/rfc6184). It repeats the encoder's SPS/PPS and one-second IDRs. Its bounded kernel socket queue drops rather than accumulating unlimited work. Status exposes sent bytes/packets/frames, local drops and errors. The bitrate counter includes RTP headers, but excludes UDP/IP and radio overhead. Native RTP is also accepted by the standard GStreamer depayloader in the automated interoperability test.
+
+For quantitative headless monitoring, use the system Python with GI/GStreamer:
+
+```bash
+/usr/bin/python3 airlink/monitor.py --bind YOUR_HOST_IPV4 --port 5600 \
+  --seconds 60 --output artifacts/receiver.json
+python3 airlink/budget.py --help
+python3 airlink/impair.py --help
+```
+
+Both receivers separate UDP reads from decoding through a bounded leaky ingress queue and explicitly request a receive socket buffer. OS limits still apply; no system-wide buffer tuning is performed. The monitor stores aggregate measurements, never pixels. A private RTP extension (0xCD01, eight-byte Unix send timestamp) supports **encoder-output-to-decoded-frame** latency measurements, with before/after HTTP clock calibration and uncertainty. This excludes exposure, ISP, encoding and display. Standard receivers ignore the extension. A browser timer at `/latency-target` is provided for a later physical optical test; its precision is bounded by display refresh and browser scheduling. No optical result is inferred from software timestamps.
+
+The bounded UDP relay can inject a repeatable blackout/loss into this stream without changing the NIC, firewall or another camera. See [real transport validation](RTP_VALIDATION_2026-11-03.md) for measured coexistence, interruption and recovery results.
 
 ## Local bench
 
@@ -57,14 +84,18 @@ Observed loopback result: 29 decoded 640x360 frames from a 60-frame finite sende
 | RTP payload / clock | 96 / 90000 Hz | Explicit caps at receiver |
 | UDP port | 5600 | Local contract; configure WFB endpoints to match |
 | RTP MTU | 1200 bytes | Candidate to avoid large IP packets; tune against actual radio MTU |
-| IDR interval | One second in synthetic encoder | Candidate recovery tradeoff; measure after packet loss |
-| SPS/PPS | `config-interval=-1` | Payloader sends with each IDR |
+| IDR interval | One second in Pi and synthetic encoders | Candidate recovery tradeoff; measure after packet loss |
+| SPS/PPS | Repeated encoder headers / `config-interval=-1` | Pi / synthetic sender respectively |
 | Jitter buffer | 30 ms bench/Pi5, 40 ms Pi3 candidate | Bounded waiting, late packets dropped |
 | Synthetic encoder | x264 ultrafast / zerolatency / no B frames | Host bench, not a Pi encoder selection |
 | Bench | 640x360, 15 FPS, 1.5 Mbit/s | Low-load starting point |
 | Pi 5 candidate | 1280x720, 30 FPS, 4 Mbit/s | Must be remeasured with radio + inference |
 
 SPS/PPS behavior is documented by [GStreamer rtph264pay](https://gstreamer.freedesktop.org/documentation/rtp/rtph264pay.html). The [jitterbuffer](https://gstreamer.freedesktop.org/documentation/rtpmanager/rtpjitterbuffer.html) reorders packets, waits only up to its latency setting and adds that latency to the pipeline. A lower value is not automatically better on a variable radio channel.
+
+## Payload budget
+
+At 4 Mbit/s video, MTU 1200, an illustrative 12/8 FEC ratio and 64 kbit/s control reserve, `airlink/budget.py` estimates approximately **6.34 Mbit/s** of payload capacity before unmodeled radio/MAC/security/FEC-block headers, bitrate bursts and fading margin. The FEC ratio is a calculation input, not an installed or validated radio configuration. Enter measured usable payload capacity, never the advertised PHY link rate.
 
 ## Radio software and drivers
 

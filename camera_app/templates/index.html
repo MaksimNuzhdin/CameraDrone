@@ -51,7 +51,7 @@
     <section class="panel events-panel"><div class="panel-title"><h2>Activity</h2><span id="disk" class="muted">—</span></div><div id="events"></div></section>
   </section>
   <aside>
-    <nav class="tabs" aria-label="Settings"><button class="active" data-tab="camera">Camera</button><button data-tab="vision">AI & CV</button><button data-tab="media">Media</button><button data-tab="lab">Lab</button></nav>
+    <nav class="tabs" aria-label="Settings"><button class="active" data-tab="camera">Camera</button><button data-tab="vision">AI & CV</button><button data-tab="media">Media</button><button data-tab="lab">Lab</button><button data-tab="link">Link</button></nav>
     <section id="tab-camera" class="tab-content">
       <div class="aside-heading"><h2>Camera settings</h2><span class="autosave">● Saved automatically</span></div>
       <div class="preset-row"><button data-preset="default">Default</button><button data-preset="motion">Motion</button><button data-preset="lowlight">Low light</button></div>
@@ -79,6 +79,20 @@
       <p class="footnote" id="analysis-location">Analysis runs at a different rate from capture. Stale boxes are hidden automatically.</p>
     </section>
     <section id="tab-media" class="tab-content" hidden><div class="aside-heading"><h2>Photos & recordings</h2><button id="refresh-media" class="quiet">↻ Refresh</button></div><p id="media-description" class="muted">Files belong to the selected source.</p><div id="media-list"></div></section>
+    <section id="tab-link" class="tab-content" hidden>
+      <div class="aside-heading"><h2>H.264 / RTP link</h2><p class="muted">Send clean encoded video to a ground receiver.</p></div>
+      <p id="rtp-state" class="chip">Not available</p>
+      <div class="control"><label for="rtp-host">Ground receiver IPv4</label><input id="rtp-host" type="text" placeholder="192.168.1.10"></div>
+      <div class="control"><label for="rtp-port">UDP port</label><input id="rtp-port" type="number" min="1024" max="65535" value="5600"></div>
+      <div class="control"><label for="rtp-mtu">RTP datagram limit (bytes)</label><input id="rtp-mtu" type="number" min="256" max="1400" value="1200"></div>
+      <div class="preset-row"><button id="rtp-start" class="primary">Start RTP</button><button id="rtp-stop">Stop RTP</button></div>
+      <p id="rtp-summary" class="muted">Start a receiver before enabling transmission.</p>
+      <p><a href="/latency-target" target="_blank" rel="noopener">Open optical latency target</a></p>
+      <h3>Ground receiver command</h3><pre id="rtp-command" class="receiver-command"></pre>
+      <p class="footnote">Run this command from the project directory on Ubuntu. It opens a native H.264 viewer. The browser preview above uses MJPEG.</p>
+      <p class="footnote">One encoder supplies RTP and recording. Stop both before changing capture format or encoder bitrate. RTP is not automatically resumed after a Pi restart.</p>
+      <p class="footnote">RTP/UDP is unencrypted. Use a trusted LAN or an encrypted radio/tunnel. Packet counters indicate local sends, not confirmed ground reception.</p>
+    </section>
     <section id="tab-lab" class="tab-content" hidden>
       <div class="aside-heading"><h2>Replay analysis lab</h2><p class="muted">Analyze a saved input on Ubuntu, without the Pi.</p></div>
       <div class="control"><label for="benchmark-input">Input</label><select id="benchmark-input"></select></div>
@@ -92,6 +106,6 @@
   </aside>
 </main>
 <div id="toast" role="status" aria-live="polite" hidden></div>
-<footer><span>CAMERA STUDIO / 0.2</span><span id="footer-source">Ubuntu host · explicit source selection</span><span id="api-time">—</span></footer>
+<footer><span>CAMERA STUDIO / 0.3</span><span id="footer-source">Ubuntu host · explicit source selection</span><span id="api-time">—</span></footer>
 <script src="/static/app.js"></script>
 </body></html>

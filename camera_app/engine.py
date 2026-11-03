@@ -20,6 +20,8 @@ from picamera2.encoders import H264Encoder
 from picamera2.outputs import FfmpegOutput
 
 from vision import Vision
+from encoded_outputs import CameraOutputs
+from rtp import validate_transport
 
 LOG = logging.getLogger('camera')
 from configuration import DEFAULTS, RECONFIGURE, validate_settings
@@ -38,6 +40,7 @@ def clean(value):
 
 
 class CameraEngine:
+    supports_rtp = True
     def __init__(self, base):
         self.base = Path(base)
         self.data = self.base / 'data'
@@ -82,6 +85,11 @@ class CameraEngine:
         self.properties = {}
         self.crop = None
         self.encoder = None
+        self.encoded_output = None
+        self.encoder_generation = 0
+        self.rtp_output = None
+        self.rtp_options = None
+        self.rtp_last = None
         self.output = None
         self.recording = None
         self.metadata_file = None
@@ -170,8 +178,8 @@ class CameraEngine:
             if not candidate['AeEnable'] and candidate['ExposureTime'] > int(1_000_000/candidate['fps']):
                 raise ValueError('Exposure is longer than the frame duration')
             changed = {k for k in values if candidate[k] != self.settings[k]}
-            if self.recording and changed & (RECONFIGURE | {'record_bitrate'}):
-                raise ValueError('Stop recording before changing resolution, FPS, rotation, HDR or bitrate')
+            if self.encoder and changed & (RECONFIGURE | {'record_bitrate'}):
+                raise ValueError('Stop recording and RTP before changing resolution, FPS, rotation, HDR or bitrate')
             previous = self.settings
             try:
                 self.settings = candidate
@@ -202,8 +210,8 @@ class CameraEngine:
             self.save_settings()
             return {'started': True}
         if action == 'snapshot_full':
-            if self.recording:
-                raise ValueError('Stop recording before taking a full-resolution photo')
+            if self.encoder:
+                raise ValueError('Stop recording and RTP before taking a full-resolution photo')
             self.check_storage()
             name = self.filename('photo', '.jpg')
             still_controls = {k:v for k,v in self.settings.items() if k in self.camera.camera_controls}
@@ -255,22 +263,17 @@ class CameraEngine:
                 raise ValueError('Recording is already active')
             self.check_storage()
             name = self.filename('video', '.mp4')
-            encoder = H264Encoder(bitrate=int(self.settings['record_bitrate']), framerate=self.settings['fps'], iperiod=self.settings['fps'])
-            if hasattr(encoder, 'preset'):
-                encoder.preset = 'ultrafast'
-            if hasattr(encoder, 'threads'):
-                encoder.threads = 2
             output = FfmpegOutput(f'-movflags +frag_keyframe+empty_moov+default_base_moof {self.data/name}')
             output.error_callback = lambda exc: self.event('Recording output error: ' + str(exc))
             try:
-                self.camera.start_encoder(encoder, output, name='main')
+                if self.encoder:self.encoded_output.add_file(output)
+                else:self.ensure_encoder(file_output=output)
             except Exception:
-                try:
-                    output.stop()
-                except Exception:
-                    pass
+                try:output.stop()
+                except Exception:pass
+                self.release_idle_encoder()
                 raise
-            self.encoder, self.output = encoder, output
+            self.output = output
             self.metadata_file = (self.data/Path(name).with_suffix('.jsonl')).open('w')
             self.metadata_file.write(json.dumps({'type':'header','settings':self.settings,'started':datetime.now(timezone.utc).isoformat()})+'\n')
             self.recording = dict(name=name, started=time.monotonic(), last_metadata=0)
@@ -278,25 +281,74 @@ class CameraEngine:
             return {'name': name}
         if action == 'record_stop':
             return self.stop_recording()
+        if action == 'rtp_start':
+            if self.rtp_output:raise ValueError('RTP is already active')
+            options=validate_transport(values)
+            try:
+                self.ensure_encoder()
+                self.rtp_output=self.encoded_output.add_rtp(options)
+                self.rtp_options=options
+            except Exception:
+                self.release_idle_encoder()
+                raise
+            self.event('RTP sender started')
+            return self.transport_status()
+        if action == 'rtp_stop':
+            return self.stop_rtp()
         if action == 'restart':
-            if self.recording:
-                raise ValueError('Stop recording before restarting the camera')
+            if self.encoder:
+                raise ValueError('Stop recording and RTP before restarting the camera')
             self.camera.stop()
             self.configure_camera()
             self.event('Camera restarted')
             return {'restarted': True}
         raise ValueError('Unknown camera action')
 
+    def ensure_encoder(self,file_output=None):
+        if self.encoder:return
+        encoder=H264Encoder(bitrate=int(self.settings['record_bitrate']),framerate=self.settings['fps'],iperiod=self.settings['fps'],repeat=True)
+        if hasattr(encoder,'preset'):encoder.preset='ultrafast'
+        if hasattr(encoder,'threads'):encoder.threads=2
+        output=CameraOutputs()
+        if file_output:output.add_file(file_output)
+        try:self.camera.start_encoder(encoder,output,name='main')
+        except Exception:
+            output.stop()
+            raise
+        self.encoder=encoder;self.encoded_output=output;self.encoder_generation+=1
+
+    def release_idle_encoder(self):
+        if self.encoder and not self.recording and not self.rtp_output:
+            encoder=self.encoder
+            try:self.camera.stop_encoder(encoder)
+            finally:self.encoder=self.encoded_output=None
+
+    def transport_status(self):
+        sender=self.rtp_output
+        return dict(supported=True,active=bool(sender),options=dict(self.rtp_options or {}),
+                    stats=sender.status() if sender else self.rtp_last,
+                    auto_resume=False,codec='H264',payload_type=96)
+
+    def stop_rtp(self):
+        if not self.rtp_output:raise ValueError('No active RTP sender')
+        self.rtp_last=self.rtp_output.status()
+        try:self.encoded_output.remove_rtp()
+        finally:
+            self.rtp_output=None;self.release_idle_encoder()
+        self.event('RTP sender stopped')
+        return self.transport_status()
+
     def stop_recording(self):
         if not self.recording:
             raise ValueError('No active recording')
         name = self.recording['name']
         try:
-            self.camera.stop_encoder(self.encoder)
+            self.encoded_output.remove_file()
         finally:
             if self.metadata_file:
                 self.metadata_file.close()
-            self.recording = self.encoder = self.output = self.metadata_file = None
+            self.recording = self.output = self.metadata_file = None
+            self.release_idle_encoder()
         self.event('Recording saved: ' + name)
         return {'name': name}
 
@@ -377,12 +429,16 @@ class CameraEngine:
                         self.stop_recording()
                     except Exception:
                         LOG.exception('Recording cleanup failed')
+                if self.rtp_output:
+                    try:self.stop_rtp()
+                    except Exception:LOG.exception('RTP cleanup failed')
                 if self.camera:
                     try:
                         self.camera.close()
                     except Exception:
                         LOG.exception('Camera close failed')
                 self.camera = None
+                self.encoder = self.encoded_output = None
             time.sleep(2)
 
     def analysis_loop(self):
@@ -458,6 +514,11 @@ class CameraEngine:
                           capabilities=dict(objects=self.vision.net is not None, faces=not self.vision.face.empty(),
                                             qr=True, motion=True, tracking=True, model_error=self.vision.model_error),
                           recording=recording, events=list(self.events), uptime_s=round(now-self.started))
+            status['transport'] = self.transport_status()
+            encoder=self.encoder
+            status['encoding'] = dict(active=bool(encoder),generation=self.encoder_generation,
+                frames_encoded=getattr(encoder,'frames_encoded',0),single_encoder=True,
+                consumers=(["recording"] if self.recording else [])+(["rtp"] if self.rtp_output else []))
             status['thermal'] = dict(mode=self.thermal_mode, throttled_hex=hex(self.throttled),
                                      current_flags=self.throttled & 0xffff,
                                      effective_preview_fps=self.effective_preview_fps(),
